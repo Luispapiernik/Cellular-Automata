@@ -14,12 +14,35 @@ from pycellslib import CellInformation
 
 class StandardCell(CellInformation):
     """
-    Esta clase
+    Esta clase representa una celula estandar, esto es, aquellas que no tienen
+    atributos
+
+    Params
+    ------
+    start(int|list(int)|tuple(int)|ndarray(int)):
+    end(int|None):
+    step(int|None):
+    default_state(int|None):
+    name_of_states(list(str)|tuple(str)|None):
+
+    Warns
+    -----
+    TODO: especificar cuando lanza errores
     """
 
     def __init__(self, start=None, end=None, step=None, default_state=None,
                  name_of_states=None):
-        pass
+        if isinstance(start, list):
+            self.states = start
+        else:
+            # start debe ser int
+            self.states = list(range(start if end else 0, end or start, step or 1))
+
+        self.default_state = default_state or self.states[0]
+
+        self.name_of_states = name_of_states or []
+        diff = len(self.states) - len(self.name_of_states)
+        self.name_of_states.extend([''] * diff)
 
     def get_states(self):
         """
@@ -29,6 +52,7 @@ class StandardCell(CellInformation):
         -------
         out(list(int)): Posibles estados que puede tener una celula
         """
+        return self.states
 
     def get_number_of_attributes(self):
         """
@@ -39,6 +63,7 @@ class StandardCell(CellInformation):
         -------
         out(int): numero de atributos de una celula
         """
+        return 0
 
     def get_default_state(self):
         """
@@ -49,6 +74,7 @@ class StandardCell(CellInformation):
         -------
         out(int): valor del estado por defecto de la celula
         """
+        return self.default_state
 
     def get_default_value_of_attributes(self):
         """
@@ -60,6 +86,8 @@ class StandardCell(CellInformation):
         -------
         out(None): valores por defecto de los atributos de la celula.
         """
+        return None
+
     # con el objetivo de obtener y mostrar informacion del automata, como
     # densidad o flujo de celulas en un estado, ... se nombran los estados
     def get_name_of_state(self, state):
@@ -74,11 +102,12 @@ class StandardCell(CellInformation):
         -------
         out(str): nombre del estado
         """
+        return self.name_of_states[state]
 
     # con el objetivo de obtener y mostrar informacion del automata, como
     # densidad, flujos, ... se nombran los atributos, los cuales tienen un
     # orden fijo
-    def get_name_of_attribute(self, index):
+    def get_name_of_attributes(self, index):
         """
         Este metodo retorna el nombre del atributo asociado a un indice, el
         indice cuenta desde cero. Se retorna None en caso de que la celula no
@@ -92,7 +121,13 @@ class StandardCell(CellInformation):
         -------
         out(None): nombre del atributo, puede ser un string vacio
         """
+        return None
 
 
 class LifeLikeCell(StandardCell):
-    pass
+    """
+    Esta clase representa a las celulas que se usan en el juego de la vida
+    """
+
+    def __init__(self):
+        super().__init__([0, 1], name_of_states=['Dead', 'Alive'])

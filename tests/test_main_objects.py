@@ -7,8 +7,6 @@ lidad, ...), esto es, en general aquellos cuya implementacion esta en
 
 import unittest
 
-from pycellslib import InitializationWithoutParametersError
-from pycellslib import InvalidParameterError
 from pycellslib.cells import StandardCell
 
 
@@ -21,23 +19,32 @@ class TestStandardCell(unittest.TestCase):
     que tengan un funcionamiento correcto
     """
 
-    def test_initialization_without_parameters(self):
-        """
-        Este metodo testea el caso en el que se inicialice StandardCell sin
-        pasar parametros
-        """
-        msg = 'No se puede instanciar StandardCell sin parametros'
-        with self.assertRaises(InitializationWithoutParametersError, msg=msg):
-            StandardCell()
+    # def test_initialization_without_parameters(self):
+    #     """
+    #     Este metodo testea el caso en el que se inicialice StandardCell sin
+    #     pasar parametros
+    #     """
+    #     msg = 'No se puede instanciar StandardCell sin parametros'
+    #     with self.assertRaises(InitializationWithoutParametersError, msg=msg):
+    #         StandardCell()
 
-    def test_initialization_with_invalid_default_state(self):
-        """
-        Este metodo testea el caso en el que se inicialice StandardCell con un
-        default_state que no esta en los estados especificados
-        """
-        msg = 'Parametro invalido, el valor especificado para default_state no es uno de los posibles estados'
-        with self.assertRaises(InvalidParameterError, msg=msg):
-            StandardCell(2, default_state=2)
+    # def test_initialization_with_invalid_default_state(self):
+    #     """
+    #     Este metodo testea el caso en el que se inicialice StandardCell con un
+    #     default_state que no esta en los estados especificados
+    #     """
+    #     msg = 'Parametro invalido, el valor especificado para default_state no es uno de los posibles estados'
+    #     with self.assertRaises(InvalidParameterError, msg=msg):
+    #         StandardCell(2, default_state=2)
+
+    # def test_get_states_initialization_from_iterable_invalid_type(self):
+    #     """
+    #     Este metodo testea la inicializacion de StandardCell desde un iterable
+    #     con valores de tipo diferente a entero
+    #     """
+    #     msg = 'Parametro invalido, la lista debe ser de enteros'
+    #     with self.assertRaises(InvalidParameterError, msg=msg):
+    #         StandardCell([0.1, 2.4, 'lo que sea'])
 
     def test_get_states_initialization_from_iterable(self):
         """
@@ -93,7 +100,7 @@ class TestStandardCell(unittest.TestCase):
         """
         cell = StandardCell(2)
 
-        self.assertIsNone(cell.get_number_of_attributes())
+        self.assertEqual(cell.get_number_of_attributes(), 0)
 
     def test_get_default_state_when_is_specified(self):
         """
@@ -121,16 +128,16 @@ class TestStandardCell(unittest.TestCase):
 
         self.assertIsNone(cell.get_default_value_of_attributes())
 
-    def test_get_name_of_state_non_existent_state(self):
-        """
-        Este metodo testea el metodo get_name_of_state cuando se pasa como
-        argumento un estado que no esta en la lista de posibles estados
-        """
-        cell = StandardCell(2, name_of_states=['Dead', 'Alive'])
+    # def test_get_name_of_state_non_existent_state(self):
+    #     """
+    #     Este metodo testea el metodo get_name_of_state cuando se pasa como
+    #     argumento un estado que no esta en la lista de posibles estados
+    #     """
+    #     cell = StandardCell(2, name_of_states=['Dead', 'Alive'])
 
-        msg = 'Parametro invalido, el estado especificado no es uno de los posibles estados'
-        with self.assertRaises(InvalidParameterError, msg=msg):
-            cell.get_name_of_state(2)
+    #     msg = 'Parametro invalido, el estado especificado no es uno de los posibles estados'
+    #     with self.assertRaises(InvalidParameterError, msg=msg):
+    #         cell.get_name_of_state(2)
 
     def test_get_name_of_state_with_full_specifications_of_names(self):
         """
@@ -168,7 +175,7 @@ class TestStandardCell(unittest.TestCase):
         self.assertEqual(cell.get_name_of_state(3), '')
         self.assertEqual(cell.get_name_of_state(4), '')
 
-    def test_get_name_of_attribute(self):
+    def test_get_name_of_attributes(self):
         """
         Este metodo testea el metodo get_name_of_attributes
         """
@@ -178,7 +185,7 @@ class TestStandardCell(unittest.TestCase):
         # entero, pero para la clase StandardCell este metodo no tiene ni
         # importancia, ni significado, entonces sea cual sea el arugmento que
         # se le pase, este debe retornar None (si es necesario pasarle algo)
-        self.assertIsNone(cell.get_name_of_attributes())
+        self.assertIsNone(cell.get_name_of_attributes(0))
 
 
 if __name__ == '__main__':
