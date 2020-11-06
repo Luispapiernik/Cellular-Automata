@@ -12,11 +12,11 @@ from pycellslib.cells import StandardCell
 
 class TestStandardCell(unittest.TestCase):
     """
-    Test para la clase StandardCell
+    Tests para la clase StandardCell
 
-    Esta clase hereda de una clase abstracta, entonces en el proceso se debe
-    testear tanto que se hayan definido todos los metodos de la clase padre y
-    que tengan un funcionamiento correcto
+    Esta clase hereda de una clase abstracta, entonces en el proceso
+    implicitamente se esta testeando que se hayan definido todos los metodos
+    de la clase padre y que tengan un funcionamiento correcto
     """
 
     # def test_initialization_without_parameters(self):
