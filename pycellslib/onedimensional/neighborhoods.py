@@ -19,7 +19,7 @@ from pycellslib import Neighborhood
 class LeftCellNeighborhood(Neighborhood):
     """
     Esta clase representa la vecindad de una celula en la que solo una celula
-    a una distancia "r" a la izquierdad afecta a la funcion de transicion
+    a una distancia "r" a la izquierdad afecta en la funcion de transicion
 
     Params
     ------

@@ -346,3 +346,80 @@ class Automaton:
         """
         Este metodo itera un paso en la ejecucion del automata
         """
+
+class FiniteNGridTopology(Topology):
+    """
+    La topologia representa la informacion espacial de una automata, esto es,
+    tiene encapsulada las dimensiones, la distribucion de las celulas, los
+    valores de estados y atributos en cada parte del espacio, metodos
+    que extraen y asignan valores a subregiones del espacio...
+
+    Esta clase representa una topologia rectangular n-dimensional, esto es,
+    para 2 dimensiones se puede visualizar como rectangulos, para 3 dimensiones
+    como cubos, ...
+    """
+
+    def __init__(self, arg):
+        pass
+
+    def __iter__(self):
+        """
+        La clase Topology debe brindar una interfaz por la cual se pueda
+        iterar por cada celula para realizar el proceso de actualizacion, este
+        metodo retorna un iterador sobre las posiciones de las celulas
+        """
+
+    def flip(self):
+        """
+        Este metodo cambia el papel (ser de lectura o ser de escritura) que
+        cumplen las 2 estructuras de datos en las que se almacenan la
+        informacion de estados y atributos de las celulas
+        """
+
+    def get_cell(self, position):
+        """
+        Este metodo obtiene la informacion de una celula, tanto los estados
+        como los atributos.
+        """
+
+    def get_states(self):
+        """
+        Este metodo retorna los valores de los estados de las celulas
+
+        Returns
+        -------
+        out(list(int)|tuple(int)|ndarray(int)): estados de las celulas
+        """
+
+    def get_attributes(self):
+        """
+        Este metodo retorna los valores de los atributos de las celulas
+
+        Returns
+        -------
+        out(list(int)|tuple(int)|ndarray(int)): atributos de las celulas
+        """
+
+    def update_cell(self, position):
+        """
+        Este metodo se encarga de actualizar una celula
+        """
+
+    def set_values_from_values(self, cell_state, cell_attributes):
+        """
+        Este metodo establece el valor de las celulas usando los mismos
+        parametros tanto para los estados, como para los atributos
+        """
+
+    def set_values_from_configuration(self, cell_states, cell_attributes):
+        """
+        Este metodo establece el valor de los estados y el valor de los
+        atributos de las celulas
+        """
+
+    def apply_mask(self, position):
+        """
+        Este metodo permite obtener una subregion del espacio (que generalmente
+        corresponderan a la vecindad de una celula), esto es, se retorna la
+        informacion de los estados y de los atributos
+        """

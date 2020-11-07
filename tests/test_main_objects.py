@@ -8,6 +8,7 @@ lidad, ...), esto es, en general aquellos cuya implementacion esta en
 import unittest
 
 from pycellslib.cells import StandardCell
+from pycellslib import FiniteNGridTopology
 
 
 class TestStandardCell(unittest.TestCase):
@@ -186,6 +187,12 @@ class TestStandardCell(unittest.TestCase):
         # importancia, ni significado, entonces sea cual sea el arugmento que
         # se le pase, este debe retornar None (si es necesario pasarle algo)
         self.assertIsNone(cell.get_name_of_attributes(0))
+
+
+class TestFiniteNGridTopology(unittest.TestCase):
+    """
+    Tests para la clase FiniteNGridTopology
+    """
 
 
 if __name__ == '__main__':

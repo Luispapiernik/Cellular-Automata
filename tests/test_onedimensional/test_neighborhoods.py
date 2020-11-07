@@ -270,3 +270,6 @@ class TestBothSideNeighborhood(unittest.TestCase):
         offset = (0, -3)
 
         self.assertEqual(neighborhood.get_offset(), offset)
+
+if __name__ == '__main__':
+    unittest.main()
