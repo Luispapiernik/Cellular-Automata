@@ -280,10 +280,11 @@ class TestFinite1GridTopology(unittest.TestCase):
             self.assertLess(border_widths[1] - 1, x_pos)
             self.assertLess(x_pos, dimensions[1] + border_widths[1])
 
-    @unittest.skip("Implementando funcionalidad")
-    def test_update_cell_and_get_cell_case_1(self):
+    # @unittest.skip("Implementando funcionalidad")
+    def test_update_cell_and_get_cell_and_flip_case_1(self):
         """
-        Este metodo testea los metodos update_cell y get_cell
+        Este metodo testea los metodos update_cell y get_cell explicitamente
+        e implicitamente se testea el metodo flip
         """
         attributes_number = 2
         dimensions = (1, 20)
@@ -295,21 +296,27 @@ class TestFinite1GridTopology(unittest.TestCase):
         for position in topology:
             state = np.random.randint(1, 100)
             attributes = np.random.randn(attributes_number)
+            # se escribe en una de las celulas en la estructura de datos
+            # usada para la escritura
             topology.update_cell(position, state, attributes)
 
+            # para leer de la estructura de datos en la que se actualizo la
+            # celula se deben invertir los papeles usando el metodo flip
+            topology.flip()
             cell_state, cell_attributes = topology.get_cell(position)
 
             self.assertEqual(state, cell_state)
             self.assertTrue(np.allclose(attributes, cell_attributes,
                                         equal_nan=True))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_update_cell_and_get_cell_case_2(self):
         """
-        Este metodo testea los metodos update_cell y get_cell
+        Este metodo testea los metodos update_cell y get_cell explicitamente
+        e implicitamente se testea el metodo flip
         """
         attributes_number = 0
-        dimensions = (1, 5)
+        dimensions = (1, 1)
         border_widths = (0, 10)
         topology = FiniteNGridTopology(attributes_number=attributes_number,
                                        dimensions=dimensions,
@@ -319,16 +326,19 @@ class TestFinite1GridTopology(unittest.TestCase):
             state = np.random.randint(1, 100)
             topology.update_cell(position, state, None)
 
+            # para leer de la estructura de datos en la que se actualizo la
+            # celula se deben invertir los papeles usando el metodo flip
+            topology.flip()
             cell_state, cell_attributes = topology.get_cell(position)
 
             self.assertEqual(state, cell_state)
             self.assertIsNone(cell_attributes)
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_values_from_and_get_states_and_get_attributes_case_1(self):
         """
         Este metodo testea los metodos set_values_from, get_states y
-        get_attributes
+        get_attributes explicitamente e implicitamente se testea el metodo flip
         """
         attributes_number = 0
         dimensions = (1, 5)
@@ -340,14 +350,17 @@ class TestFinite1GridTopology(unittest.TestCase):
         state = np.random.randint(1, 100)
         topology.set_values_from(state, None)
 
-        states = np.zeros(dimensions) + state
+        states = np.zeros(dimensions, dtype=np.int) + state
+        # para leer de la estructura de datos en la que se actualizaron las
+        # celulas se deben invertir los papeles usando el metodo flip
+        topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_values_from_and_get_states_and_get_attributes_case_2(self):
         """
         Este metodo testea los metodos set_values_from, get_states y
-        get_attributes
+        get_attributes explicitamente e implicitamente se testea el metodo flip
         """
         attributes_number = 2
         dimensions = (1, 5)
@@ -358,17 +371,20 @@ class TestFinite1GridTopology(unittest.TestCase):
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
-        topology.set_values_from(state, attributes_number)
+        topology.set_values_from(state, attributes)
 
-        states = np.zeros(dimensions) + state
+        states = np.zeros(dimensions, dtype=np.int) + state
         attributes_array = np.zeros((*dimensions, attributes_number))
         attributes_array[..., :] = attributes
 
+        # para leer de la estructura de datos en la que se actualizaron las
+        # celulas se deben invertir los papeles usando el metodo flip
+        topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
         self.assertTrue(np.allclose(topology.get_attributes(),
                                     attributes_array))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_values_from_and_get_states_and_get_attributes_case_3(self):
         """
         Este metodo testea los metodos set_values_from, get_states y
@@ -383,17 +399,20 @@ class TestFinite1GridTopology(unittest.TestCase):
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
-        topology.set_values_from(state, attributes_number)
+        topology.set_values_from(state, attributes)
 
-        states = np.zeros(dimensions) + state
+        states = np.zeros(dimensions, dtype=np.int) + state
         attributes_array = np.zeros((*dimensions, attributes_number))
         attributes_array[..., :] = attributes
 
+        # para leer de la estructura de datos en la que se actualizaron las
+        # celulas se deben invertir los papeles usando el metodo flip
+        topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
         self.assertTrue(np.allclose(topology.get_attributes(),
                                     attributes_array))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_values_from_configuration_case_1(self):
         """
         Este metodo testea el metodo set_values_from_configuration
@@ -410,9 +429,12 @@ class TestFinite1GridTopology(unittest.TestCase):
         states = np.zeros(dimensions) + np.random.randint(1, 100)
         topology.set_values_from_configuration(states, None)
 
+        # para leer de la estructura de datos en la que se actualizaron las
+        # celulas se deben invertir los papeles usando el metodo flip
+        topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_values_from_configuration_case_2(self):
         """
         Este metodo testea el metodo set_values_from_configuration
@@ -430,11 +452,14 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_array = np.random.random((*dimensions, attributes_number))
         topology.set_values_from_configuration(states, attributes_array)
 
+        # para leer de la estructura de datos en la que se actualizaron las
+        # celulas se deben invertir los papeles usando el metodo flip
+        topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
         self.assertTrue(np.allclose(topology.get_attributes(),
                                     attributes_array))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_values_from_configuration_case_3(self):
         """
         Este metodo testea el metodo set_values_from_configuration
@@ -452,11 +477,14 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_array = np.random.random((*dimensions, attributes_number))
         topology.set_values_from_configuration(states, attributes_array)
 
+        # para leer de la estructura de datos en la que se actualizaron las
+        # celulas se deben invertir los papeles usando el metodo flip
+        topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
         self.assertTrue(np.allclose(topology.get_attributes(),
                                     attributes_array))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_apply_mask_case_1(self):
         """
         Este metodo testea el metodo apply_mask
@@ -470,23 +498,27 @@ class TestFinite1GridTopology(unittest.TestCase):
                                        dimensions=dimensions,
                                        border_widths=border_widths)
 
-        states = np.expand_dims(np.arange(dimensions[1], dtype=np.int))
+        states = np.expand_dims(np.arange(dimensions[1], dtype=np.int), axis=0)
         topology.set_values_from_configuration(states, None)
+        # para leer de la estructura de datos en la que se actualizaron las
+        # celulas se deben invertir los papeles usando el metodo flip
+        topology.flip()
 
         mask = np.array([[1, 1, 1]], dtype=np.bool)
         neighborhoods = np.array([
-            [[1, 2, 3]],
-            [[2, 3, 4]],
-            [[3, 4, 5]],
-            [[4, 5, 6]],
-            [[5, 6, 7]],
-            [[6, 7, 8]],
-            [[7, 8, 9]],
-            [[8, 9, 0]],
-            [[9, 0, 0]]
+            [0, 1, 2],
+            [1, 2, 3],
+            [2, 3, 4],
+            [3, 4, 5],
+            [4, 5, 6],
+            [5, 6, 7],
+            [6, 7, 8],
+            [7, 8, 9],
+            [8, 9, 0],
+            [9, 0, 0]
         ])
 
-        counter = 1
+        counter = 0
         for position in topology:
             states_n, attributes_n = topology.apply_mask(position, mask)
 
@@ -495,7 +527,7 @@ class TestFinite1GridTopology(unittest.TestCase):
             self.assertIsNone(attributes_n)
             counter += 1
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_apply_mask_case_2(self):
         """
         Este metodo testea el metodo apply_mask
@@ -507,29 +539,26 @@ class TestFinite1GridTopology(unittest.TestCase):
                                        dimensions=dimensions,
                                        border_widths=border_widths)
 
-        states = np.expand_dims(np.arange(dimensions[1], dtype=np.int))
         attributes_array = np.random.random((*dimensions, attributes_number))
-        topology.set_values_from_configuration(states, attributes_array)
+        topology.set_values_from_configuration([[2]], attributes_array)
+        # para leer de la estructura de datos en la que se actualizaron las
+        # celulas se deben invertir los papeles usando el metodo flip
+        topology.flip()
 
         mask = np.array([[1, 1, 1]], dtype=np.bool)
-        neighborhoods_1 = np.array([
-            [[1, 2, 3]]
-        ])
+        neighborhoods_1 = np.array([2, 0, 0], dtype=np.int)
 
-        neighborhoods_2 = np.vstack([attributes_array,
-                                     np.zeros(2, 1, attributes_number)])
+        neighborhoods_2 = np.array([attributes_array[0, 0], [0, 0], [0, 0]])
 
-        counter = 1
         for position in topology:
             states_n, attributes_n = topology.apply_mask(position, mask)
 
             self.assertTrue(np.array_equal(states_n,
-                            neighborhoods_1[counter]))
+                            neighborhoods_1))
             self.assertTrue(np.array_equal(attributes_n,
                             neighborhoods_2))
-            counter += 1
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_1(self):
         """
         Este metodo testea el metodo set_border_values
@@ -542,14 +571,17 @@ class TestFinite1GridTopology(unittest.TestCase):
                                        border_widths=border_widths)
 
         state = np.random.randint(1, 100)
-        topology.test_set_border_values(state, None)
+        topology.set_border_values(state, None)
 
-        space = np.zeros(dimensions, dtype=np.int) + state
+        space = np.zeros((dimensions[0] + 2 * border_widths[0],
+                          dimensions[1] + 2 * border_widths[1]),
+                         dtype=np.int) + state
         space[0, border_widths[1]:border_widths[1] + dimensions[1]] = 0
 
-        self.assertTrue(np.array_equal(topology.get_states(), space))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
+                                       space))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_2(self):
         """
         Este metodo testea el metodo set_border_values
@@ -563,17 +595,25 @@ class TestFinite1GridTopology(unittest.TestCase):
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
-        topology.test_set_border_values(state, attributes)
+        topology.set_border_values(state, attributes)
 
-        space = np.zeros(dimensions, dtype=np.int) + state
+        space = np.zeros((dimensions[0] + 2 * border_widths[0],
+                          dimensions[1] + 2 * border_widths[1]),
+                         dtype=np.int) + state
         space[0, border_widths[1]:border_widths[1] + dimensions[1]] = 0
-        attributes_array = np.zeros((*dimensions, attributes_number))
+
+        attributes_array = np.zeros((dimensions[0] + 2 * border_widths[0],
+                                     dimensions[1] + 2 * border_widths[1],
+                                     attributes_number))
         attributes_array[..., :] = attributes
         attributes_array[0, border_widths[1]:border_widths[1] + dimensions[1], :] = 0
 
-        self.assertTrue(np.array_equal(topology.get_states(), space))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
+                                       space))
+        self.assertTrue(np.allclose(topology.attributes[topology.write_buffer],
+                                    attributes_array))
 
-    @unittest.skip("Implementando funcionalidad")
+    # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_3(self):
         """
         Este metodo testea el metodo set_border_values
@@ -587,15 +627,23 @@ class TestFinite1GridTopology(unittest.TestCase):
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
-        topology.test_set_border_values(state, attributes)
+        topology.set_border_values(state, attributes)
 
-        space = np.zeros(dimensions, dtype=np.int) + state
+        space = np.zeros((dimensions[0] + 2 * border_widths[0],
+                          dimensions[1] + 2 * border_widths[1]),
+                         dtype=np.int) + state
         space[0, border_widths[1]:border_widths[1] + dimensions[1]] = 0
-        attributes_array = np.zeros((*dimensions, attributes_number))
+
+        attributes_array = np.zeros((dimensions[0] + 2 * border_widths[0],
+                                     dimensions[1] + 2 * border_widths[1],
+                                     attributes_number))
         attributes_array[..., :] = attributes
         attributes_array[0, border_widths[1]:border_widths[1] + dimensions[1], :] = 0
 
-        self.assertTrue(np.array_equal(topology.get_states(), space))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
+                                       space))
+        self.assertTrue(np.allclose(topology.attributes[topology.write_buffer],
+                                    attributes_array))
 
 
 class TestFinite2GridTopology(unittest.TestCase):

@@ -434,16 +434,35 @@ class FiniteNGridTopology(Topology):
     """
 
     def __init__(self, attributes_number, dimensions, border_widths):
+        # numero de atributos de cada celula en el espacio
         self.attributes_number = attributes_number
+        # dimensiones del espacio sin tener en cuenta la frontera
         self.dimensions = np.array(dimensions, dtype=np.int)
+        # dimensiones de la frontera
         self.border_widths = np.array(border_widths, dtype=np.int)
 
-        self.real_shape = dimensions + 2 * border_widths
-        self.states_buffer_1 = np.zeros(self.real_shape, dtype=np.int)
-        self.states_buffer_2 = np.zeros(self.real_shape, dtype=np.int)
+        # dimensiones reales del espacio, esto es considerando la frontera
+        self.real_shape = self.dimensions + 2 * self.border_widths
 
-        self.attributes_buffer_1 = np.zeros((*self.real_shape, attributes_number), dtype=np.float)
-        self.attributes_buffer_2 = np.zeros((*self.real_shape, attributes_number), dtype=np.float)
+        self.subshape = tuple(slice(self.border_widths[i],
+                                    self.dimensions[i] + self.border_widths[i])
+                              for i in range(self.dimensions.size))
+
+        # el indice 0 corresponde al buffer 1 y el indice 1 corresponde al
+        # buffer 2
+        self.states = [np.zeros(self.real_shape, dtype=np.int),
+                       np.zeros(self.real_shape, dtype=np.int)]
+
+        # si se tienen 0 atributos, entonces no hace falta crear un array
+        self.attributes = None
+        if attributes_number != 0:
+            self.attributes = [np.zeros((*self.real_shape, attributes_number), dtype=np.float),
+                               np.zeros((*self.real_shape, attributes_number), dtype=np.float)]
+
+        # estos atributos llevan la cuenta de que buffer se usa para lectura y
+        # que buffer se usa para escritura
+        self.write_buffer = 0
+        self.read_buffer = 1
 
     def __iter__(self):
         """
@@ -457,10 +476,14 @@ class FiniteNGridTopology(Topology):
         out(iter(list(tuple(int)))): iterador que recorre cada uno de los
             indices de las celulas que son actualizables
         """
-        index = np.array(list(np.ndindex(*self.dimensions)), dtype=np.int)
-        index += self.border_widths
+        index = np.ndindex(*(self.dimensions + self.border_widths))
 
-        return iter(index)
+        # las primeras cordenadas corresponden a la frontera, entonces se
+        # iteran sobre ellas para que el usuario no tenga acceso a estas
+        for _ in range(np.prod(self.border_widths[self.border_widths != 0])):
+            next(index)
+
+        return index
 
     def flip(self):
         """
@@ -468,6 +491,11 @@ class FiniteNGridTopology(Topology):
         cumplen las 2 estructuras de datos en las que se almacenan la
         informacion de estados y atributos de las celulas
         """
+        self.write_buffer += 1
+        self.read_buffer += 1
+
+        self.write_buffer %= 2
+        self.read_buffer %= 2
 
     def get_cell(self, position):
         """
@@ -487,6 +515,16 @@ class FiniteNGridTopology(Topology):
             componente es un array con el valor de los atributos, o None, en
             caso de que las celulas no tenga atributos
         """
+        # se hace casting de las posiciones, numpy entiende cada entrada de
+        # la tupla como la coordenada correspondiente a cada eje del array
+        position = tuple(position)
+        state = self.states[self.read_buffer][position]
+
+        attributes = None
+        if self.attributes is not None:
+            attributes = self.attributes[self.read_buffer][position]
+
+        return state, attributes
 
     def get_states(self):
         """
@@ -497,6 +535,7 @@ class FiniteNGridTopology(Topology):
         -------
         out(list(int)|tuple(int)|ndarray(int)): estados de las celulas
         """
+        return self.states[self.read_buffer][self.subshape]
 
     def get_attributes(self):
         """
@@ -507,6 +546,7 @@ class FiniteNGridTopology(Topology):
         -------
         out(list(float)|tuple(float)|ndarray(float)): atributos de las celulas
         """
+        return self.attributes[self.read_buffer][self.subshape]
 
     def update_cell(self, position, cell_state, cell_attributes):
         """
@@ -522,6 +562,13 @@ class FiniteNGridTopology(Topology):
             los valores de los atributos. Si las celulas no tienen atributos
             se pasa None
         """
+        # se hace casting de las posiciones, numpy entiende cada entrada de
+        # la tupla como la coordenada correspondiente a cada eje del array
+        position = tuple(position)
+        self.states[self.write_buffer][position] = cell_state
+
+        if self.attributes is not None:
+            self.attributes[self.write_buffer][position] = cell_attributes
 
     def set_border_values(self, cell_state, cell_attributes):
         """
@@ -533,6 +580,14 @@ class FiniteNGridTopology(Topology):
         attributes_values(list): especifica el valor de los atributos en los
             bordes, cada elemento de la lista especifica un atributo
         """
+        # se crea mascara para establecer el valor en los bordes
+        mask = np.ones(self.real_shape, dtype=np.bool)
+        # el subshape no hace parte de la frontera
+        mask[self.subshape] = 0
+        self.states[self.write_buffer][mask] = cell_state
+
+        if self.attributes is not None:
+            self.attributes[self.write_buffer][mask] = cell_attributes
 
     def set_values_from(self, cell_state, cell_attributes):
         """
@@ -545,6 +600,10 @@ class FiniteNGridTopology(Topology):
         cell_attributes(list|None): lista o arreglo con los valores de
             los atributos. Si las celulas no tienen atributos se pasa None
         """
+        self.states[self.write_buffer][self.subshape] = cell_state
+
+        if self.attributes is not None:
+            self.attributes[self.write_buffer][self.subshape] = cell_attributes
 
     def set_values_from_configuration(self, cell_states, cell_attributes):
         """
@@ -559,6 +618,10 @@ class FiniteNGridTopology(Topology):
             atributos de cada celula. Si las celulas no tienen atributos se
             pasa None
         """
+        self.states[self.write_buffer][self.subshape] = cell_states
+
+        if self.attributes is not None:
+            self.attributes[self.write_buffer][self.subshape] = cell_attributes
 
     def apply_mask(self, position, mask):
         """
@@ -573,8 +636,18 @@ class FiniteNGridTopology(Topology):
 
         Returns
         ------
-        out(tuple): Tupla donde la primera componente son los estados de las
-            celulas que representan la vecindad, y la segunda componente
-            representa los atributos de cada celula, si las celulas no tienen
-            atributos se retorna None
+        out(tuple): Tupla donde la primera componente es un array con los
+            estados de las celulas que representan la vecindad, y la segunda
+            componente un array con los atributos de cada celula, si las
+            celulas no tienen atributos se retorna None
         """
+        subshape = tuple(slice(position[i], position[i] + mask.shape[i])
+                         for i in range(len(mask.shape)))
+
+        states = self.states[self.read_buffer][subshape][mask]
+
+        attributes = None
+        if self.attributes is not None:
+            attributes = self.attributes[self.read_buffer][subshape][mask]
+
+        return states, attributes
