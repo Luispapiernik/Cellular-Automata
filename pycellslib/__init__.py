@@ -9,36 +9,37 @@ entre si (con el objeto Automata)
 """
 
 from abc import ABCMeta, abstractmethod
+import numpy as np
 
 
-# class PyCellsLibError(Exception):
-#     """
-#     Esta clase solo tiene la intencion de renombrar (se crea un sinonimo), para
-#     hacer mas claro que errores son creados en la libreria, todas las
-#     excepciones deben heredar de esta clase
-#     """
+class PyCellsLibError(Exception):
+    """
+    Esta clase solo tiene la intencion de renombrar (se crea un sinonimo), para
+    hacer mas claro que errores son creados en la libreria, todas las
+    excepciones deben heredar de esta clase
+    """
 
 
-# class InitializationWithoutParametersError(PyCellsLibError):
-#     """
-#     Esta excepcion debe ser lanzada cuando se intente instanciar un objeto
-#     sin pasar los parametros requeridos a la clase
-#     """
+class InitializationWithoutParametersError(PyCellsLibError):
+    """
+    Esta excepcion debe ser lanzada cuando se intente instanciar un objeto
+    sin pasar los parametros requeridos a la clase
+    """
 
-#     def __init__(self, class_name):
-#         msg = 'No se puede instanciar {} sin parametros'.format(class_name)
-#         super().__init__(msg)
+    def __init__(self, class_name):
+        msg = 'No se puede instanciar {} sin parametros'.format(class_name)
+        super().__init__(msg)
 
 
-# class InvalidParameterError(PyCellsLibError):
-#     """
-#     Esta excepcion debe ser lanzada cuanto se pase un argumento invalido, esto
-#     es, no esta en el rango requerido, no tenga el tipo adecuado, ...
-#     """
+class InvalidParameterError(PyCellsLibError):
+    """
+    Esta excepcion debe ser lanzada cuanto se pase un argumento invalido, esto
+    es, no esta en el rango requerido, no tenga el tipo adecuado, ...
+    """
 
-#     def __init__(self, reason_msg):
-#         msg = 'Parametro invalido, {}'.format(reason_msg)
-#         super().__init__(msg)
+    def __init__(self, reason_msg):
+        msg = 'Parametro invalido, {}'.format(reason_msg)
+        super().__init__(msg)
 
 
 class CellInformation(metaclass=ABCMeta):
@@ -150,7 +151,11 @@ class Topology(metaclass=ABCMeta):
     de datos se va escribiendo el nuevo valor de las celulas), por tanto en
     cada una de las estructuras se podra solo realizar una de dos, o escribir
     o leer (este comportamiento se puede modificar con el metodo flip, que
-    invierte los papeles en las estructuras de datos)
+    invierte los papeles de lectura-escritura en las estructuras de datos).
+    Ademas estas estructuras deben tener el cuenta el como la clase maneja
+    las fronteras (las celulas de la frontera son no actualizables, su unico
+    objetivo es el de hacer que todas las celulas actualizables tengan la
+    misma condicion para las vecindades)
     """
 
     @abstractmethod
@@ -158,7 +163,13 @@ class Topology(metaclass=ABCMeta):
         """
         La clase Topology debe brindar una interfaz por la cual se pueda
         iterar por cada celula para realizar el proceso de actualizacion, este
-        metodo retorna un iterador sobre las posiciones de las celulas
+        metodo retorna un iterador sobre las posiciones de las celulas que son
+        actualizables (esto es, las que no estan en la frontera)
+
+        Returns
+        -------
+        out(iter(int)): iterador que recorre cada uno de los indices de las
+            celulas que son actualizables
         """
 
     @abstractmethod
@@ -173,13 +184,27 @@ class Topology(metaclass=ABCMeta):
     def get_cell(self, position):
         """
         Este metodo obtiene la informacion de una celula, tanto los estados
-        como los atributos.
+        como los atributos. Este metodo no permite obtener una celula que esta
+        en la frontera
+
+        Params
+        ------
+        position(tuple(int)|list(int)|ndarray(int)): representan la posicion de
+            la celula
+
+        Returns
+        -------
+        outs(tuple): tupla cuya primera componente es un entero con el valor
+            del estado de la celula asociada a la posicion dada, y la segunda
+            componente es un array con el valor de los atributos, o None, en
+            caso de que las celulas no tenga atributos
         """
 
     @abstractmethod
     def get_states(self):
         """
-        Este metodo retorna los valores de los estados de las celulas
+        Este metodo retorna los estados de las celulas, no se tiene en cuenta
+        la frontera
 
         Returns
         -------
@@ -189,39 +214,87 @@ class Topology(metaclass=ABCMeta):
     @abstractmethod
     def get_attributes(self):
         """
-        Este metodo retorna los valores de los atributos de las celulas
+        Este metodo retorna los atributos de las celulas, no se tiene en cuenta
+        la frontera
 
         Returns
         -------
-        out(list(int)|tuple(int)|ndarray(int)): atributos de las celulas
+        out(list(float)|tuple(float)|ndarray(float)): atributos de las celulas
         """
 
     @abstractmethod
-    def update_cell(self, position):
+    def update_cell(self, position, cell_state, cell_attributes):
         """
-        Este metodo se encarga de actualizar una celula
+        Este metodo actualiza la informacion de una celula, tanto estados como
+        atributos
+
+        Params
+        ------
+        position(tuple|list): representa la posicion de la celula que sera
+            actualizada
+        cell_state(int): entero con el valor del estado de la celula
+        cell_attributes(list(float)|ndarray(float)|None): lista o arreglo con
+            los valores de los atributos. Si las celulas no tienen atributos
+            se pasa None
         """
 
     @abstractmethod
-    def set_values_from_values(self, cell_state, cell_attributes):
+    def set_border_values(self, cell_state, cell_attributes):
+        """
+        Este metodo establece el valor en los bordes
+
+        Params
+        ------
+        state_value(int): especifica el valor de los estados en los bordes
+        attributes_values(list): especifica el valor de los atributos en los
+            bordes, cada elemento de la lista especifica un atributo
+        """
+
+    @abstractmethod
+    def set_values_from(self, cell_state, cell_attributes):
         """
         Este metodo establece el valor de las celulas usando los mismos
         parametros tanto para los estados, como para los atributos
+
+        Params
+        ------
+        cell_state(int): entero con el valor de los estados de las celulas
+        cell_attributes(list|None): lista o arreglo con los valores de
+            los atributos. Si las celulas no tienen atributos se pasa None
         """
 
     @abstractmethod
     def set_values_from_configuration(self, cell_states, cell_attributes):
         """
-        Este metodo establece el valor de los estados y el valor de los
-        atributos de las celulas
+        Este metodo establece el valor de las celulas desde un arreglo de
+        estados y un arreglo de atributos
+
+        Params
+        ------
+        cell_states(ndarray(int)): arreglo con los valores de los estados de
+            cada celula
+        cell_attributes(ndarray(float)|None): arreglo con los valores de los
+            atributos de cada celula. Si las celulas no tienen atributos se
+            pasa None
         """
 
     @abstractmethod
-    def apply_mask(self, position):
+    def apply_mask(self, position, mask):
         """
-        Este metodo permite obtener una subregion del espacio (que generalmente
-        corresponderan a la vecindad de una celula), esto es, se retorna la
-        informacion de los estados y de los atributos
+        Este metodo retorna la vecindad de una celula mediante la aplicacion
+        de la mascara que representa la vecindad
+
+        Params
+        ------
+        position(tuple(int)|list(int)): posicion en la que se ubica la mascara
+        mask(ndarray): arreglo que representa alguna vecindad
+
+        Returns
+        ------
+        out(tuple): Tupla donde la primera componente son los estados de las
+            celulas que representan la vecindad, y la segunda componente
+            representa los atributos de cada celula, si las celulas no tienen
+            atributos se retorna None
         """
 
 
@@ -347,6 +420,7 @@ class Automaton:
         Este metodo itera un paso en la ejecucion del automata
         """
 
+
 class FiniteNGridTopology(Topology):
     """
     La topologia representa la informacion espacial de una automata, esto es,
@@ -354,20 +428,39 @@ class FiniteNGridTopology(Topology):
     valores de estados y atributos en cada parte del espacio, metodos
     que extraen y asignan valores a subregiones del espacio...
 
-    Esta clase representa una topologia rectangular n-dimensional, esto es,
-    para 2 dimensiones se puede visualizar como rectangulos, para 3 dimensiones
-    como cubos, ...
+    Esta clase representa una topologia rectangular n-dimensional finita, esto
+    es, para 2 dimensiones se puede visualizar como una teselacion de
+    rectangulos, para 3 dimensiones como una teselacion de cubos, ...
     """
 
-    def __init__(self, arg):
-        pass
+    def __init__(self, attributes_number, dimensions, border_widths):
+        self.attributes_number = attributes_number
+        self.dimensions = np.array(dimensions, dtype=np.int)
+        self.border_widths = np.array(border_widths, dtype=np.int)
+
+        self.real_shape = dimensions + 2 * border_widths
+        self.states_buffer_1 = np.zeros(self.real_shape, dtype=np.int)
+        self.states_buffer_2 = np.zeros(self.real_shape, dtype=np.int)
+
+        self.attributes_buffer_1 = np.zeros((*self.real_shape, attributes_number), dtype=np.float)
+        self.attributes_buffer_2 = np.zeros((*self.real_shape, attributes_number), dtype=np.float)
 
     def __iter__(self):
         """
         La clase Topology debe brindar una interfaz por la cual se pueda
         iterar por cada celula para realizar el proceso de actualizacion, este
-        metodo retorna un iterador sobre las posiciones de las celulas
+        metodo retorna un iterador sobre las posiciones de las celulas que son
+        actualizables (esto es, las que no estan en la frontera)
+
+        Returns
+        -------
+        out(iter(list(tuple(int)))): iterador que recorre cada uno de los
+            indices de las celulas que son actualizables
         """
+        index = np.array(list(np.ndindex(*self.dimensions)), dtype=np.int)
+        index += self.border_widths
+
+        return iter(index)
 
     def flip(self):
         """
@@ -379,12 +472,26 @@ class FiniteNGridTopology(Topology):
     def get_cell(self, position):
         """
         Este metodo obtiene la informacion de una celula, tanto los estados
-        como los atributos.
+        como los atributos. Este metodo no permite obtener una celula que esta
+        en la frontera
+
+        Params
+        ------
+        position(tuple(int)|list(int)|ndarray(int)): representan la posicion de
+            la celula
+
+        Returns
+        -------
+        outs(tuple): tupla cuya primera componente es un entero con el valor
+            del estado de la celula asociada a la posicion dada, y la segunda
+            componente es un array con el valor de los atributos, o None, en
+            caso de que las celulas no tenga atributos
         """
 
     def get_states(self):
         """
-        Este metodo retorna los valores de los estados de las celulas
+        Este metodo retorna los estados de las celulas, no se tiene en cuenta
+        la frontera
 
         Returns
         -------
@@ -393,33 +500,81 @@ class FiniteNGridTopology(Topology):
 
     def get_attributes(self):
         """
-        Este metodo retorna los valores de los atributos de las celulas
+        Este metodo retorna los atributos de las celulas, no se tiene en cuenta
+        la frontera
 
         Returns
         -------
-        out(list(int)|tuple(int)|ndarray(int)): atributos de las celulas
+        out(list(float)|tuple(float)|ndarray(float)): atributos de las celulas
         """
 
-    def update_cell(self, position):
+    def update_cell(self, position, cell_state, cell_attributes):
         """
-        Este metodo se encarga de actualizar una celula
+        Este metodo actualiza la informacion de una celula, tanto estados como
+        atributos
+
+        Params
+        ------
+        position(tuple|list): representa la posicion de la celula que sera
+            actualizada, esta posicion debe tener en cuenta la frontera
+        cell_state(int): entero con el valor del estado de la celula
+        cell_attributes(list(float)|ndarray(float)|None): lista o arreglo con
+            los valores de los atributos. Si las celulas no tienen atributos
+            se pasa None
         """
 
-    def set_values_from_values(self, cell_state, cell_attributes):
+    def set_border_values(self, cell_state, cell_attributes):
+        """
+        Este metodo establece el valor en los bordes
+
+        Params
+        ------
+        state_value(int): especifica el valor de los estados en los bordes
+        attributes_values(list): especifica el valor de los atributos en los
+            bordes, cada elemento de la lista especifica un atributo
+        """
+
+    def set_values_from(self, cell_state, cell_attributes):
         """
         Este metodo establece el valor de las celulas usando los mismos
         parametros tanto para los estados, como para los atributos
+
+        Params
+        ------
+        cell_state(int): entero con el valor de los estados de las celulas
+        cell_attributes(list|None): lista o arreglo con los valores de
+            los atributos. Si las celulas no tienen atributos se pasa None
         """
 
     def set_values_from_configuration(self, cell_states, cell_attributes):
         """
-        Este metodo establece el valor de los estados y el valor de los
-        atributos de las celulas
+        Este metodo establece el valor de las celulas desde un arreglo de
+        estados y un arreglo de atributos
+
+        Params
+        ------
+        cell_states(ndarray(int)): arreglo con los valores de los estados de
+            cada celula
+        cell_attributes(ndarray(float)|None): arreglo con los valores de los
+            atributos de cada celula. Si las celulas no tienen atributos se
+            pasa None
         """
 
-    def apply_mask(self, position):
+    def apply_mask(self, position, mask):
         """
-        Este metodo permite obtener una subregion del espacio (que generalmente
-        corresponderan a la vecindad de una celula), esto es, se retorna la
-        informacion de los estados y de los atributos
+        Este metodo retorna la vecindad de una celula mediante la aplicacion
+        de la mascara que representa la vecindad
+
+        Params
+        ------
+        position(tuple(int)|list(int)): posicion en la que se ubica la mascara
+        mask(ndarray): arreglo que representa alguna vecindad, esta posicion
+            debe tener en cuenta el borde
+
+        Returns
+        ------
+        out(tuple): Tupla donde la primera componente son los estados de las
+            celulas que representan la vecindad, y la segunda componente
+            representa los atributos de cada celula, si las celulas no tienen
+            atributos se retorna None
         """
