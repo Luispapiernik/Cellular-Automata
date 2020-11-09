@@ -106,28 +106,36 @@ class TestWolframCodeRule(unittest.TestCase):
                                neighborhood_radius=1)
 
         states = np.array([1, 1, 1], dtype=np.int)
-        self.assertEqual(rule.apply_rule(states), 0)
+        state, _ = rule.apply_rule(states, None)
+        self.assertEqual(state, 0)
 
         states[:] = [1, 1, 0]
-        self.assertEqual(rule.apply_rule(states), 0)
+        state, _ = rule.apply_rule(states, None)
+        self.assertEqual(state, 0)
 
         states[:] = [1, 0, 1]
-        self.assertEqual(rule.apply_rule(states), 0)
+        state, _ = rule.apply_rule(states, None)
+        self.assertEqual(state, 0)
 
         states[:] = [1, 0, 0]
-        self.assertEqual(rule.apply_rule(states), 1)
+        state, _ = rule.apply_rule(states, None)
+        self.assertEqual(state, 1)
 
         states[:] = [0, 1, 1]
-        self.assertEqual(rule.apply_rule(states), 1)
+        state, _ = rule.apply_rule(states, None)
+        self.assertEqual(state, 1)
 
         states[:] = [0, 1, 0]
-        self.assertEqual(rule.apply_rule(states), 1)
+        state, _ = rule.apply_rule(states, None)
+        self.assertEqual(state, 1)
 
         states[:] = [0, 0, 1]
-        self.assertEqual(rule.apply_rule(states), 1)
+        state, _ = rule.apply_rule(states, None)
+        self.assertEqual(state, 1)
 
         states[:] = [0, 0, 0]
-        self.assertEqual(rule.apply_rule(states), 0)
+        state, _ = rule.apply_rule(states, None)
+        self.assertEqual(state, 0)
 
 
 if __name__ == '__main__':

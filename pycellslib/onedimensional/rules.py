@@ -115,4 +115,4 @@ class WolframCodeRule(Rule):
         """
         neighborhood_configuration = self.base_representation_to_int(cell_states)
 
-        return self.rule[self.neighborhood_configurations - 1 - neighborhood_configuration]
+        return self.rule[self.neighborhood_configurations - 1 - neighborhood_configuration], None

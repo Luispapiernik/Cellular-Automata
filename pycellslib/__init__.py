@@ -381,6 +381,15 @@ class Automaton:
     atributos, flujos, ...) del automata
     """
 
+    def __init__(self, cell_information, rule, topology):
+        self.cell_information = cell_information
+        self.rule = rule
+        self.topology = topology
+
+        neighborhood = self.rule.get_neighborhood()
+        self.mask = neighborhood.get_mask()
+        self.offset = neighborhood.get_offset()
+
     def load_configuration(self, directory):
         """
         Este metodo debe cargar la informacion del automata desde un directorio
@@ -419,6 +428,18 @@ class Automaton:
         """
         Este metodo itera un paso en la ejecucion del automata
         """
+        self.topology.flip()
+
+        for position in self.topology:
+            mask_position = tuple(position[i] + self.offset[i]
+                                  for i in range(len(position)))
+
+            cells, attributes = self.topology.apply_mask(mask_position,
+                                             self.mask)
+
+            cell, attributes = self.rule.apply_rule(cells, attributes)
+
+            self.topology.update_cell(position, cell, attributes)
 
 
 class FiniteNGridTopology(Topology):
