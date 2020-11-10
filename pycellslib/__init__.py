@@ -442,6 +442,44 @@ class Automaton:
             self.topology.update_cell(position, cell, attributes)
 
 
+class PositionIterator(object):
+    """
+    Esta clase representa un iterador sobre posiciones permitidas en el
+    espacio
+
+    Parameters
+    ----------
+    dimensions(ndarray(int)): dimensiones del espacio
+    border_widths(ndarray(int)): dimensiones de la frontera del espacio
+    """
+    def __init__(self, dimensions, border_widths):
+        self.dimensions = dimensions
+        # dimensiones de la frontera
+        self.border_widths = border_widths
+
+        self.index = np.ndindex(*(self.dimensions + self.border_widths))
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        """
+        Este metodo itera sobre todos los posibles indices del espacio y
+        retorna solo aquellos que no corresponden a puntos de la frontera
+        """
+        while True:
+            # se revisa que las coordenadas esten en el limite permitido
+            coordinate = np.array(next(self.index), dtype=np.int)
+
+            inferior_limit = self.border_widths - 1 < coordinate
+            superior_limit = coordinate < self.dimensions + self.border_widths
+
+            if np.all(inferior_limit & superior_limit):
+                return tuple(coordinate)
+
+        return coordinate
+
+
 class FiniteNGridTopology(Topology):
     """
     La topologia representa la informacion espacial de una automata, esto es,
@@ -452,6 +490,13 @@ class FiniteNGridTopology(Topology):
     Esta clase representa una topologia rectangular n-dimensional finita, esto
     es, para 2 dimensiones se puede visualizar como una teselacion de
     rectangulos, para 3 dimensiones como una teselacion de cubos, ...
+
+    Params
+    ------
+    attributes_number(int): numero de atributos de cada celula en el espacio
+    dimensions(tuple(int)|list(int)|ndarray(int)): dimensiones del espacio
+    border_widths(tuple(int)|list(int)|ndarray(int)): dimensiones de la
+        frontera. Estas dimensiones se le suman a las dimensiones del espacio
     """
 
     def __init__(self, attributes_number, dimensions, border_widths):
@@ -462,9 +507,10 @@ class FiniteNGridTopology(Topology):
         # dimensiones de la frontera
         self.border_widths = np.array(border_widths, dtype=np.int)
 
-        # dimensiones reales del espacio, esto es considerando la frontera
+        # dimensiones reales del espacio, esto es, considerando la frontera
         self.real_shape = self.dimensions + 2 * self.border_widths
 
+        # subregion del espacio completo, sin considerar la frontera
         self.subshape = tuple(slice(self.border_widths[i],
                                     self.dimensions[i] + self.border_widths[i])
                               for i in range(self.dimensions.size))
@@ -497,14 +543,7 @@ class FiniteNGridTopology(Topology):
         out(iter(list(tuple(int)))): iterador que recorre cada uno de los
             indices de las celulas que son actualizables
         """
-        index = np.ndindex(*(self.dimensions + self.border_widths))
-
-        # las primeras cordenadas corresponden a la frontera, entonces se
-        # iteran sobre ellas para que el usuario no tenga acceso a estas
-        for _ in range(np.prod(self.border_widths[self.border_widths != 0])):
-            next(index)
-
-        return index
+        return PositionIterator(self.dimensions, self.border_widths)
 
     def flip(self):
         """
@@ -526,8 +565,7 @@ class FiniteNGridTopology(Topology):
 
         Params
         ------
-        position(tuple(int)|list(int)|ndarray(int)): representan la posicion de
-            la celula
+        position(tuple(int)): representan la posicion de la celula
 
         Returns
         -------
@@ -536,9 +574,6 @@ class FiniteNGridTopology(Topology):
             componente es un array con el valor de los atributos, o None, en
             caso de que las celulas no tenga atributos
         """
-        # se hace casting de las posiciones, numpy entiende cada entrada de
-        # la tupla como la coordenada correspondiente a cada eje del array
-        position = tuple(position)
         state = self.states[self.read_buffer][position]
 
         attributes = None
@@ -554,7 +589,7 @@ class FiniteNGridTopology(Topology):
 
         Returns
         -------
-        out(list(int)|tuple(int)|ndarray(int)): estados de las celulas
+        out(ndarray(int)): estados de las celulas
         """
         return self.states[self.read_buffer][self.subshape]
 
@@ -565,7 +600,7 @@ class FiniteNGridTopology(Topology):
 
         Returns
         -------
-        out(list(float)|tuple(float)|ndarray(float)): atributos de las celulas
+        out(ndarray(float)): atributos de las celulas
         """
         return self.attributes[self.read_buffer][self.subshape]
 
@@ -576,16 +611,13 @@ class FiniteNGridTopology(Topology):
 
         Params
         ------
-        position(tuple|list): representa la posicion de la celula que sera
-            actualizada, esta posicion debe tener en cuenta la frontera
+        position(tuple(int)): representa la posicion de la celula que sera
+            actualizada
         cell_state(int): entero con el valor del estado de la celula
         cell_attributes(list(float)|ndarray(float)|None): lista o arreglo con
             los valores de los atributos. Si las celulas no tienen atributos
             se pasa None
         """
-        # se hace casting de las posiciones, numpy entiende cada entrada de
-        # la tupla como la coordenada correspondiente a cada eje del array
-        position = tuple(position)
         self.states[self.write_buffer][position] = cell_state
 
         if self.attributes is not None:
@@ -597,9 +629,10 @@ class FiniteNGridTopology(Topology):
 
         Params
         ------
-        state_value(int): especifica el valor de los estados en los bordes
-        attributes_values(list): especifica el valor de los atributos en los
-            bordes, cada elemento de la lista especifica un atributo
+        cell_state(int): especifica el valor de los estados en los bordes
+        cell_attributes(list(float)|ndarray(float)|None): especifica el valor
+            de los atributos en los bordes, cada elemento de la lista
+            especifica un atributo
         """
         # se crea mascara para establecer el valor en los bordes
         mask = np.ones(self.real_shape, dtype=np.bool)
@@ -618,8 +651,8 @@ class FiniteNGridTopology(Topology):
         Params
         ------
         cell_state(int): entero con el valor de los estados de las celulas
-        cell_attributes(list|None): lista o arreglo con los valores de
-            los atributos. Si las celulas no tienen atributos se pasa None
+        cell_attributes(list(float)|ndarray(float)|None): especifica el valor
+            de los atributos, si la celula no tiene atributos se pasa None
         """
         self.states[self.write_buffer][self.subshape] = cell_state
 
@@ -651,9 +684,10 @@ class FiniteNGridTopology(Topology):
 
         Params
         ------
-        position(tuple(int)|list(int)): posicion en la que se ubica la mascara
-        mask(ndarray): arreglo que representa alguna vecindad, esta posicion
-            debe tener en cuenta el borde
+        position(tuple(int)): posicion en la que se ubica la mascara, esta
+            posicion debe tener en cuenta la frontera y las dimensiones de la
+            mascara
+        mask(ndarray): arreglo que representa alguna vecindad
 
         Returns
         ------
@@ -662,6 +696,7 @@ class FiniteNGridTopology(Topology):
             componente un array con los atributos de cada celula, si las
             celulas no tienen atributos se retorna None
         """
+        # se extrae la region en donde se aplicara la mascara
         subshape = tuple(slice(position[i], position[i] + mask.shape[i])
                          for i in range(len(mask.shape)))
 

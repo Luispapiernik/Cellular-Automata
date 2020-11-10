@@ -4,7 +4,6 @@ unidimensionales
 """
 
 import unittest
-
 import numpy as np
 
 from pycellslib.onedimensional.neighborhoods import LeftCellNeighborhood
