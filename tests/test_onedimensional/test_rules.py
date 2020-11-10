@@ -1,6 +1,6 @@
 """
 En este script se testea las reglas implementadas para los casos
-bidimensionales
+unidimensionales
 """
 
 import unittest
