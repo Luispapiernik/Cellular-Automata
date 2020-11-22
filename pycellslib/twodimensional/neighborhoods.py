@@ -31,7 +31,7 @@ class MooreNeighborhood(Neighborhood):
     def __init__(self, radius=1, inclusive=True):
         self.radius = radius
 
-        self.mask = np.ones((1 + 2 * radius, 1 + 2 * radius), dtype=np.int)
+        self.mask = np.ones((1 + 2 * radius, 1 + 2 * radius), dtype=np.bool)
         if not inclusive:
             self.mask[radius, radius] = 0
 

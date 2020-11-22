@@ -1198,6 +1198,7 @@ class TestFinite2GridTopology(unittest.TestCase):
 
         neighborhoods_2 = np.array([[1, 1], [1, 1], [1, 1], [1, 1]])
 
+        counter = 0
         for position in topology:
             states_n, attributes_n = topology.apply_mask(position, mask)
 
@@ -1205,6 +1206,10 @@ class TestFinite2GridTopology(unittest.TestCase):
                             neighborhoods_1))
             self.assertTrue(np.array_equal(attributes_n,
                             neighborhoods_2))
+
+            counter += 1
+
+        self.assertEqual(counter, 4)
 
 
 if __name__ == '__main__':
