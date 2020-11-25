@@ -5,7 +5,7 @@ from pycellslib.cells import LifeLikeCell
 from pycellslib.twodimensional.rules import BSNotationRule
 from pycellslib.twodimensional.topologies import FinitePlaneTopology
 
-from pycellslib.visualizers import matplotlib_visualizer as mv
+from pycellslib.visualizers import pygame_visualizer as pv
 
 
 def get_random_configuration(dimension):
@@ -14,21 +14,24 @@ def get_random_configuration(dimension):
     return configuration.reshape(dimension, dimension)
 
 
-def main():
-    dimension = 30
+def game_of_life():
+    dimension = 50
     cell_information = LifeLikeCell()
     topology = FinitePlaneTopology(0, dimension, dimension, 3, 3)
     rule = BSNotationRule([3], [2, 3], radius=1)
 
-    automaton = Automaton(cell_information, rule, topology)
+    automaton = Automaton(cell_information, rule, topology, name='Game Of Life')
     automaton.topology.set_values_from_configuration(get_random_configuration(dimension), None)
 
-    fig, axes = mv.configure_animation('Game Of Life')
-    animation = mv.animate(automaton, fig, axes, frames=1000, time_per_frame=50,
-                           save_count=None)
+    system = pv.System(automaton, {0: pv.COLORS['WHITE'],
+                                   1: pv.COLORS['BLACK']})
+    visualizer = pv.CellGraph(system, margin_width=40, margin_height=40,
+                              background_color=(0, 0, 0), cellwidth=10,
+                              cellheight=10, fps=5,
+                              separation_between_cells=1)
 
-    animation.save('prueba.mp4')
+    visualizer.run()
 
 
 if __name__ == '__main__':
-    main()
+    game_of_life()

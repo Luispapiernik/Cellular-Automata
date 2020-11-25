@@ -157,6 +157,13 @@ class Topology(metaclass=ABCMeta):
     objetivo es el de hacer que todas las celulas actualizables tengan la
     misma condicion para las vecindades)
     """
+    @abstractmethod
+    def get_offset(self):
+        """
+        Este metodo debe retornar el offset que se le hacen a las posiciones
+        en la matrix para no considerar las celulas de las fronteras en el
+        proceso de actualizacion
+        """
 
     @abstractmethod
     def __iter__(self):
@@ -381,10 +388,11 @@ class Automaton:
     atributos, flujos, ...) del automata
     """
 
-    def __init__(self, cell_information, rule, topology):
+    def __init__(self, cell_information, rule, topology, name=''):
         self.cell_information = cell_information
         self.rule = rule
         self.topology = topology
+        self.name = name
 
         neighborhood = self.rule.get_neighborhood()
         self.mask = neighborhood.get_mask()
@@ -511,7 +519,7 @@ class FiniteNGridTopology(Topology):
         self.border_widths = np.array(border_widths, dtype=np.int)
 
         # dimensiones reales del espacio, esto es, considerando la frontera
-        self.real_shape = self.dimensions + 2 * self.border_widths
+        self.real_dimensions = self.dimensions + 2 * self.border_widths
 
         # subregion del espacio completo, sin considerar la frontera
         self.subshape = tuple(slice(self.border_widths[i],
@@ -520,19 +528,27 @@ class FiniteNGridTopology(Topology):
 
         # el indice 0 corresponde al buffer 1 y el indice 1 corresponde al
         # buffer 2
-        self.states = [np.zeros(self.real_shape, dtype=np.int),
-                       np.zeros(self.real_shape, dtype=np.int)]
+        self.states = [np.zeros(self.real_dimensions, dtype=np.int),
+                       np.zeros(self.real_dimensions, dtype=np.int)]
 
         # si se tienen 0 atributos, entonces no hace falta crear un array
         self.attributes = None
         if attributes_number != 0:
-            self.attributes = [np.zeros((*self.real_shape, attributes_number), dtype=np.float),
-                               np.zeros((*self.real_shape, attributes_number), dtype=np.float)]
+            self.attributes = [np.zeros((*self.real_dimensions, attributes_number), dtype=np.float),
+                               np.zeros((*self.real_dimensions, attributes_number), dtype=np.float)]
 
         # estos atributos llevan la cuenta de que buffer se usa para lectura y
         # que buffer se usa para escritura
         self.write_buffer = 0
         self.read_buffer = 1
+
+    def get_offset(self):
+        """
+        Este metodo debe retornar el offset que se le hacen a las posiciones
+        en la matrix para no considerar las celulas de las fronteras en el
+        proceso de actualizacion
+        """
+        return self.border_widths
 
     def __iter__(self):
         """
@@ -638,7 +654,7 @@ class FiniteNGridTopology(Topology):
             especifica un atributo
         """
         # se crea mascara para establecer el valor en los bordes
-        mask = np.ones(self.real_shape, dtype=np.bool)
+        mask = np.ones(self.real_dimensions, dtype=np.bool)
         # el subshape no hace parte de la frontera
         mask[self.subshape] = 0
         self.states[self.write_buffer][mask] = cell_state
