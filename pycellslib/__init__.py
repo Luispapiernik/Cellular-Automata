@@ -428,6 +428,9 @@ class Automaton:
         """
         Este metodo itera un paso en la ejecucion del automata
         """
+        # en el paso anterior, la nueva informacion se escribio en el buffer
+        # de escritura, para usarla en el paso de actualizacion, el buffer
+        # debe ser cambiado a uno de lectura
         self.topology.flip()
 
         for position in self.topology:
