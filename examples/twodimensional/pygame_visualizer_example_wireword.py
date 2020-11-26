@@ -27,7 +27,7 @@ class WireWorldRules(Rule):
         """
         return self.neighborhood
 
-    def apply_rule(self, cell_states, cell_attributes=None):
+    def apply_rule(self, cell_states, _):
         """
         Params
         ------
