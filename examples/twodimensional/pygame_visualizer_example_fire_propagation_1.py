@@ -66,7 +66,7 @@ def fire_propagation():
     topology = FinitePlaneTopology(0, dimension, dimension, 3, 3)
     rule = FirePropagationRules(0.7)
 
-    automaton = Automaton(cell_information, rule, topology, name='Wire World')
+    automaton = Automaton(cell_information, rule, topology, name='Fire Propagation')
     automaton.topology.set_values_from(1, None)
 
     system = pv.System(automaton, {0: (128, 64, 0),
