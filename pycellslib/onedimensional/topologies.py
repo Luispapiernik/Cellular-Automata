@@ -10,6 +10,13 @@ class FiniteLineTopology(FiniteNGridTopology):
 
     Esta clase representa la topologia en la que el espacio se puede visualizar
     como una linea recta finita
+
+    Parameters
+    ----------
+    attributes_number(int): numero de atributos de cada celula en el espacio
+    size(int): dimension del espacio
+    border_width(int): dimension de la frontera. Estas dimensiones se le
+        suman a las dimensiones del espacio
     """
 
     def __init__(self, attributes_number, size, border_width):

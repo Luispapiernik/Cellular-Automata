@@ -107,8 +107,8 @@ class CellInformation(metaclass=ABCMeta):
         """
         Este metodo retorna el nombre asociado a un estado.
 
-        Params
-        ------
+        Parameters
+        ----------
         state(int): valor del estado del que se desea conocer el nombre
 
         Returns
@@ -126,8 +126,8 @@ class CellInformation(metaclass=ABCMeta):
         indice cuenta desde cero. Se retorna None en caso de que la celula no
         tenga atributos
 
-        Params
-        ------
+        Parameters
+        ----------
         index(int): indice que corresponde al atributo
 
         Returns
@@ -194,8 +194,8 @@ class Topology(metaclass=ABCMeta):
         como los atributos. Este metodo no permite obtener una celula que esta
         en la frontera
 
-        Params
-        ------
+        Parameters
+        ----------
         position(tuple(int)|list(int)|ndarray(int)): representan la posicion de
             la celula
 
@@ -235,8 +235,8 @@ class Topology(metaclass=ABCMeta):
         Este metodo actualiza la informacion de una celula, tanto estados como
         atributos
 
-        Params
-        ------
+        Parameters
+        ----------
         position(tuple|list): representa la posicion de la celula que sera
             actualizada
         cell_state(int): entero con el valor del estado de la celula
@@ -250,8 +250,8 @@ class Topology(metaclass=ABCMeta):
         """
         Este metodo establece el valor en los bordes
 
-        Params
-        ------
+        Parameters
+        ----------
         state_value(int): especifica el valor de los estados en los bordes
         attributes_values(list): especifica el valor de los atributos en los
             bordes, cada elemento de la lista especifica un atributo
@@ -263,8 +263,8 @@ class Topology(metaclass=ABCMeta):
         Este metodo establece el valor de las celulas usando los mismos
         parametros tanto para los estados, como para los atributos
 
-        Params
-        ------
+        Parameters
+        ----------
         cell_state(int): entero con el valor de los estados de las celulas
         cell_attributes(list|None): lista o arreglo con los valores de
             los atributos. Si las celulas no tienen atributos se pasa None
@@ -276,8 +276,8 @@ class Topology(metaclass=ABCMeta):
         Este metodo establece el valor de las celulas desde un arreglo de
         estados y un arreglo de atributos
 
-        Params
-        ------
+        Parameters
+        ----------
         cell_states(ndarray(int)): arreglo con los valores de los estados de
             cada celula
         cell_attributes(ndarray(float)|None): arreglo con los valores de los
@@ -291,8 +291,8 @@ class Topology(metaclass=ABCMeta):
         Este metodo retorna la vecindad de una celula mediante la aplicacion
         de la mascara que representa la vecindad
 
-        Params
-        ------
+        Parameters
+        ----------
         position(tuple(int)|list(int)): posicion en la que se ubica la mascara
         mask(ndarray): arreglo que representa alguna vecindad
 
@@ -361,8 +361,8 @@ class Rule(metaclass=ABCMeta):
         Este metodo aplica las reglas de transicion a una vecindad de la
         celula
 
-        Params
-        ------
+        Parameters
+        ----------
         cell_states(ndarray(int)): arreglo que representa los estados de la
             vecindad de una celula (es retornado por el metodo apply_mask de
             la clase topology)
@@ -502,8 +502,8 @@ class FiniteNGridTopology(Topology):
     es, para 2 dimensiones se puede visualizar como una teselacion de
     rectangulos, para 3 dimensiones como una teselacion de cubos, ...
 
-    Params
-    ------
+    Parameters
+    ----------
     attributes_number(int): numero de atributos de cada celula en el espacio
     dimensions(tuple(int)|list(int)|ndarray(int)): dimensiones del espacio
     border_widths(tuple(int)|list(int)|ndarray(int)): dimensiones de la
@@ -582,8 +582,8 @@ class FiniteNGridTopology(Topology):
         como los atributos. Este metodo no permite obtener una celula que esta
         en la frontera
 
-        Params
-        ------
+        Parameters
+        ----------
         position(tuple(int)): representan la posicion de la celula
 
         Returns
@@ -628,8 +628,8 @@ class FiniteNGridTopology(Topology):
         Este metodo actualiza la informacion de una celula, tanto estados como
         atributos
 
-        Params
-        ------
+        Parameters
+        ----------
         position(tuple(int)): representa la posicion de la celula que sera
             actualizada
         cell_state(int): entero con el valor del estado de la celula
@@ -646,8 +646,8 @@ class FiniteNGridTopology(Topology):
         """
         Este metodo establece el valor en los bordes
 
-        Params
-        ------
+        Parameters
+        ----------
         cell_state(int): especifica el valor de los estados en los bordes
         cell_attributes(list(float)|ndarray(float)|None): especifica el valor
             de los atributos en los bordes, cada elemento de la lista
@@ -667,8 +667,8 @@ class FiniteNGridTopology(Topology):
         Este metodo establece el valor de las celulas usando los mismos
         parametros tanto para los estados, como para los atributos
 
-        Params
-        ------
+        Parameters
+        ----------
         cell_state(int): entero con el valor de los estados de las celulas
         cell_attributes(list(float)|ndarray(float)|None): especifica el valor
             de los atributos, si la celula no tiene atributos se pasa None
@@ -683,8 +683,8 @@ class FiniteNGridTopology(Topology):
         Este metodo establece el valor de las celulas desde un arreglo de
         estados y un arreglo de atributos
 
-        Params
-        ------
+        Parameters
+        ----------
         cell_states(ndarray(int)): arreglo con los valores de los estados de
             cada celula
         cell_attributes(ndarray(float)|None): arreglo con los valores de los
@@ -701,8 +701,8 @@ class FiniteNGridTopology(Topology):
         Este metodo retorna la vecindad de una celula mediante la aplicacion
         de la mascara que representa la vecindad
 
-        Params
-        ------
+        Parameters
+        ----------
         position(tuple(int)): posicion en la que se ubica la mascara, esta
             posicion debe tener en cuenta la frontera y las dimensiones de la
             mascara

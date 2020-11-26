@@ -21,8 +21,8 @@ class MooreNeighborhood(Neighborhood):
     Esta clase representa la vecindad de Moore de una celula en un espacio
     2-dimensional
 
-    Params
-    ------
+    Parameters
+    ----------
     radius(int): radio de la vecindad
     inclusive(bool): si es True, la celula afecta su propia transicion, False
         en caso contrario
@@ -58,7 +58,7 @@ class MooreNeighborhood(Neighborhood):
 
 class CircularNeighborhood(Neighborhood):
     """docstring for CircularNeighborhood"""
-        
+ 
 
 class L2Neighborhood(Neighborhood):
     """docstring for L2Neighborhood"""
@@ -69,8 +69,8 @@ class NeumannNeighborhood(Neighborhood):
     Esta clase representa la vecindad de Neumann de una celula en un espacio
     2-dimensional
 
-    Params
-    ------
+    Parameters
+    ----------
     radius(int): radio de la vecindad
     inclusive(bool): si es True, la celula afecta su propia transicion, False
         en caso contrario

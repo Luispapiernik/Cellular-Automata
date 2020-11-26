@@ -12,11 +12,19 @@ from pycellslib.twodimensional.neighborhoods import MooreNeighborhood
 from pycellslib import Rule
 
 
-
 class BSNotationRule(Rule):
     """
     Esta clase representa las reglas de transicion denotadas con la notacion
     B/S Notation
+
+    Parameters
+    ----------
+    B(list(int)): lista de los enteros que ocacionan a una celula muerta, nacer
+    S(list(int)): lista de los enteros que permiten que una celula viva
+        sobreviva
+    radius(int): en este formato de especificacino de las reglas
+        se debe usar una vecindad de Moore, este parametro representa el radio
+        de esa vecindad
     """
 
     def __init__(self, B, S, radius=1):
@@ -35,15 +43,17 @@ class BSNotationRule(Rule):
         """
         return self.neighborhood
 
-    def apply_rule(self, cell_states, cell_attributes=None):
+    def apply_rule(self, cell_states, _):
         """
+        Este metodo aplica la regla a una vecindad de alguna celula
+
         Params
         ------
-        cell_states(ndarray(int)):
+        cell_states(ndarray(int)): estados de las celulas vecinas
 
         Returns
         -------
-        out(int):
+        out(int): estado de la celula en la siguiente iteracion
         """
         # indice de la celula del centro
         current_cell = cell_states[cell_states.size // 2]

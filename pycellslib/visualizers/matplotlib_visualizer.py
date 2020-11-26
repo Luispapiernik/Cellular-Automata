@@ -7,8 +7,18 @@ from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.animation import FuncAnimation
 
 
-class PaletteCreator():
-    """docstring for PaletteCreator"""
+class ColorPaletteCreator():
+    """
+    Esta clase brinda una interfaz a la funcion LinearSementedColormap, para
+    la creacion de paleta usando un numero discreto de colores
+
+    Parameters
+    ----------
+    colors(lits(int, RGBA/...)): lista de duplas, en las que la primera
+        componente es un entero especificando el estado y el segundo un color
+        en el formato RGBA o cualquier otro entendido por matplotlib
+    name(str): nombre de la paleta de colores
+    """
     def __init__(self, colors, name=''):
         max_color = max(i for i, _ in colors)
         self.colors = [(0, 0, 0)] * (max_color + 1)
@@ -20,7 +30,13 @@ class PaletteCreator():
 
     def set_color(self, state, color):
         """
-        Docs
+        Este metodo configura el color para un estado dado
+
+        Parameters
+        ----------
+        state(int): estado para el que se va a configurar el color
+        color(RGBA/...): color especificado en el formato RGBA o cualquier otro
+            entendido por matplotlib
         """
         if state >= len(self.colors):
             self.colors.append(color)
@@ -28,7 +44,18 @@ class PaletteCreator():
         self.colors[state] = color
 
 
-class GameOfLifeLikePalette(PaletteCreator):
+class GameOfLifeLikePalette(ColorPaletteCreator):
+    """
+    Esta clase representa una paleta de colores para automatas con estados
+    binarios (0/1)
+
+    Parameters
+    ----------
+    invert(bool): originalmente al estado 0 se le asigna el color blanco y al
+        estado 1, el color negor. Si este parametro es True se invierten los
+        colores
+    """
+
     def __init__(self, invert=False):
         colors = [[0, 'white'], [1, 'black']]
 
@@ -41,12 +68,19 @@ class GameOfLifeLikePalette(PaletteCreator):
 
 def update_function(_, axes, palette, interpolation, automaton):
     """
-    Docs
+    Funcion usada para la actualizacion de la animacion
+
+    parameters
+    -: frame actual en el que se va en la simulacion
+    axes(Axes): axes de la figura en matplotlib
+    palette(Palette): paleta de colores usada para la graficacion de la imagen
+    interpolation(str): interpolacion usada para la graficacion de la imagen
+    automaton(Automaton): automata usado en la animacion
     """
     automaton.next_step()
-    img = axes.imshow(255 * automaton.topology.get_states(),
-                      cmap=palette, aspect='equal',
-                      interpolation=interpolation)
+    states = automaton.topology.get_states()
+    img = axes.imshow(255 * states / states.max(), cmap=palette,
+                      aspect='equal', interpolation=interpolation)
     return (img, )
 
 
@@ -56,7 +90,7 @@ def configure_animation(title, fontdict={'color': 'white',
                                          'fontsize':16},
                         figsize=(5, 5), backgroud_color='black'):
     """
-    Docs
+    Esta funcion configura la animacion
     """
     fig = plt.figure(figsize=figsize, facecolor=backgroud_color)
     axes = fig.add_subplot()
@@ -69,10 +103,10 @@ def configure_animation(title, fontdict={'color': 'white',
 
 
 def animate(automaton, fig, axes, palette=GameOfLifeLikePalette().cmap,
-            interpolation='sinc', frames=None, time_per_frame=50,
+            interpolation='None', frames=None, time_per_frame=50,
             save_count=None):
     """
-    Docs
+    Esta funcion corre una animacion previamente configurada
     """
     axes.imshow(255 * automaton.topology.get_states(), cmap=palette,
                 interpolation=interpolation)

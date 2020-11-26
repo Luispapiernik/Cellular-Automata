@@ -17,17 +17,19 @@ class StandardCell(CellInformation):
     Esta clase representa una celula estandar, esto es, aquellas que no tienen
     atributos
 
-    Params
-    ------
-    start(int|list(int)|tuple(int)|ndarray(int)):
-    end(int|None):
-    step(int|None):
-    default_state(int|None):
-    name_of_states(list(str)|tuple(str)|None):
-
-    Warns
-    -----
-    TODO: especificar cuando lanza errores
+    Parameters
+    ----------
+    start(int|list(int)|tuple(int)|ndarray(int)): parametro usado para
+        especificar los posibles estados del automata, cuando se pasa un
+        iterable. Pero start toma un valor entero, se usa para especificar
+        el rango en el que estan los estados
+    end(int|None): cuando el parametro start es un entero, este parametro es
+        usado para especificar el rango en el que estan los estados 
+    step(int|None): cuando el parametro start es un entero, este parametro es
+        usado para especificar que enteros en el rango especificado hacen
+        parte de los posibles estados
+    default_state(int|None): valor por defecto que se usa para los estados
+    name_of_states(list(str)|tuple(str)|None): nombre de cada estado
     """
 
     def __init__(self, start=None, end=None, step=None, default_state=None,
@@ -94,8 +96,8 @@ class StandardCell(CellInformation):
         """
         Este metodo retorna el nombre asociado a un estado.
 
-        Params
-        ------
+        Parameters
+        ----------
         state(int): valor del estado del que se desea conocer el nombre
 
         Returns
@@ -113,8 +115,8 @@ class StandardCell(CellInformation):
         indice cuenta desde cero. Se retorna None en caso de que la celula no
         tenga atributos
 
-        Params
-        ------
+        Parameters
+        ----------
         index(int): indice que corresponde al atributo
 
         Returns

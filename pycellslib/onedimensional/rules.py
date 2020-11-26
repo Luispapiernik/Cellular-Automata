@@ -9,6 +9,8 @@ class WolframCodeRule(Rule):
     Esta clase representa las reglas de transicion denotadas mediante el codigo
     de wolfram para automatas unidimensionales
 
+    Parameters
+    ----------
     rule_number(int): numero que representa la regla
     states_number(int): numero de todos los estados posibles de las celulas
     neighborhood_radius(int): en este formato de especificacino de las reglas
@@ -54,8 +56,8 @@ class WolframCodeRule(Rule):
         Este metodo convierte un entero a la base usada por la clase, usando
         tantas cifras como numero de configuraciones de los vecinos hayan
 
-        Params
-        ------
+        Parameters
+        ----------
         number(int): numero entero a cambiar de base
 
         Returns
@@ -86,6 +88,8 @@ class WolframCodeRule(Rule):
         Este metodo convierte un numero especificado en la base numerica usada
         por la clase a entero
 
+        Parameters
+        ----------
         base_representation(ndarray(int)): representacion de un entero la base
             numerica usada en la clase
 
@@ -100,8 +104,8 @@ class WolframCodeRule(Rule):
         Este metodo aplica las reglas de transicion a una vecindad de la
         celula
 
-        Params
-        ------
+        Parameters
+        ----------
         cell_states(ndarray(int)): arreglo que representa los estados de la
             vecindad de una celula (es retornado por el metodo apply_mask de
             la clase topology)

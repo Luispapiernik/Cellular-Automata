@@ -11,8 +11,8 @@ class FinitePlaneTopology(FiniteNGridTopology):
     Esta clase representa la topologia que se puede visualizar como un plano
     rectangular finito
 
-    Params
-    ------
+    Parameters
+    ----------
     attributes_number(int): numero de atributos por celula
     width(int): ancho del espacio
     height(int): alto del espacio
