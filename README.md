@@ -2,6 +2,11 @@
 
 PyCellsLib es una librería para la simulación y visualización de autómatas celulares arbitrarios.
 
+## Instalación
+Para realizar la instalación de la libreria primero se debe clonar localmente el repositorio con el comando `git clone https://github.com/computational-group-the-golden-ticket/Cellular-Automata.git`, luego debera aceder a la carpeta del repositorio y ejecutar el comando `python3 -m pip install -e .` o `pip3 install -e .`.
+
+Para la desinstalación de la libreria ejecute el comando `python3 -m pip uninstall pycellslib` o `pip3 uninstall pycellslib`
+
 ## Autómata celular
 
 ### Definición
@@ -33,6 +38,8 @@ Esta librería pretende ofrecer herramientas para la simulación y visualizació
 - Un objeto que coordina la comunicacion entre los objetos mencionados anteriormente y ademas brinda informacion general del autama (densidad de determinado estado o atributo, flujo de esas mismas variables, ...)
 
 Dadas las restricciones anteriores se realizo la definicion de 5 clases base, que son **CellInformation**, **Topology**, **Neighborhood**, **Rule** y **Automaton** y cuyas definiciones son:
+
+Para visualización de ejemplos en los que se use cada clase [visitar](https://github.com/computational-group-the-golden-ticket/Cellular-Automata/tree/main/examples)
 
 ### CellInformation
 ```python
@@ -431,5 +438,3 @@ class Automaton:
         Este metodo itera un paso en la ejecucion del automata
         """
 ```
-
-Para visualización de ejemplos en los que se use cada clase [visitar](https://github.com/computational-group-the-golden-ticket/Cellular-Automata/tree/main/examples)
