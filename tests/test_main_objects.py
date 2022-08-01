@@ -6,13 +6,16 @@ lidad, ...), esto es, en general aquellos cuya implementacion esta en
 """
 
 import unittest
+
 import numpy as np
 
-from pycellslib import InitializationWithoutParametersError
-from pycellslib import InvalidParameterError
+from pycellslib import (
+    FiniteNGridTopology,
+    InitializationWithoutParametersError,
+    InvalidParameterError,
+    PositionIterator,
+)
 from pycellslib.cells import StandardCell
-from pycellslib import PositionIterator
-from pycellslib import FiniteNGridTopology
 
 
 class TestStandardCell(unittest.TestCase):
@@ -30,7 +33,7 @@ class TestStandardCell(unittest.TestCase):
         Este metodo testea el caso en el que se inicialice StandardCell sin
         pasar parametros
         """
-        msg = 'No se puede instanciar StandardCell sin parametros'
+        msg = "No se puede instanciar StandardCell sin parametros"
         with self.assertRaises(InitializationWithoutParametersError, msg=msg):
             StandardCell()
 
@@ -40,7 +43,7 @@ class TestStandardCell(unittest.TestCase):
         Este metodo testea el caso en el que se inicialice StandardCell con un
         default_state que no esta en los estados especificados
         """
-        msg = 'Parametro invalido, el valor especificado para default_state no es uno de los posibles estados'
+        msg = "Parametro invalido, el valor especificado para default_state no es uno de los posibles estados"
         with self.assertRaises(InvalidParameterError, msg=msg):
             StandardCell(2, default_state=2)
 
@@ -50,9 +53,9 @@ class TestStandardCell(unittest.TestCase):
         Este metodo testea la inicializacion de StandardCell desde un iterable
         con valores de tipo diferente a entero
         """
-        msg = 'Parametro invalido, la lista debe ser de enteros'
+        msg = "Parametro invalido, la lista debe ser de enteros"
         with self.assertRaises(InvalidParameterError, msg=msg):
-            StandardCell([0.1, 2.4, 'lo que sea'])
+            StandardCell([0.1, 2.4, "lo que sea"])
 
     def test_get_states_initialization_from_iterable(self):
         """
@@ -64,7 +67,6 @@ class TestStandardCell(unittest.TestCase):
         # en esta linea se esta testeando implicitamente que el tipo retornado
         # sea list
         self.assertEqual(cell.get_states(), [0, 1, 2])
-
 
     def test_get_states_initialization_from_numbers_of_states(self):
         """
@@ -142,9 +144,9 @@ class TestStandardCell(unittest.TestCase):
         Este metodo testea el metodo get_name_of_state cuando se pasa como
         argumento un estado que no esta en la lista de posibles estados
         """
-        cell = StandardCell(2, name_of_states=['Dead', 'Alive'])
+        cell = StandardCell(2, name_of_states=["Dead", "Alive"])
 
-        msg = 'Parametro invalido, el estado especificado no es uno de los posibles estados'
+        msg = "Parametro invalido, el estado especificado no es uno de los posibles estados"
         with self.assertRaises(InvalidParameterError, msg=msg):
             cell.get_name_of_state(2)
 
@@ -153,23 +155,23 @@ class TestStandardCell(unittest.TestCase):
         Este metodo testea el metodo get_name_of_state cuando en la
         inicializacion se especificaron todos los nombres
         """
-        cell = StandardCell(2, name_of_states=['Dead', 'Alive'])
+        cell = StandardCell(2, name_of_states=["Dead", "Alive"])
 
-        self.assertEqual(cell.get_name_of_state(0), 'Dead')
-        self.assertEqual(cell.get_name_of_state(1), 'Alive')
+        self.assertEqual(cell.get_name_of_state(0), "Dead")
+        self.assertEqual(cell.get_name_of_state(1), "Alive")
 
     def test_get_name_of_state_with_some_specifications_of_names(self):
         """
         Este metodo testea el metodo get_name_of_state cuando en la
         inicializacion se especifican los primeros nombres
         """
-        cell = StandardCell(5, name_of_states=['Dead', 'Alive', 'Binary'])
+        cell = StandardCell(5, name_of_states=["Dead", "Alive", "Binary"])
 
-        self.assertEqual(cell.get_name_of_state(0), 'Dead')
-        self.assertEqual(cell.get_name_of_state(1), 'Alive')
-        self.assertEqual(cell.get_name_of_state(2), 'Binary')
-        self.assertEqual(cell.get_name_of_state(3), '')
-        self.assertEqual(cell.get_name_of_state(4), '')
+        self.assertEqual(cell.get_name_of_state(0), "Dead")
+        self.assertEqual(cell.get_name_of_state(1), "Alive")
+        self.assertEqual(cell.get_name_of_state(2), "Binary")
+        self.assertEqual(cell.get_name_of_state(3), "")
+        self.assertEqual(cell.get_name_of_state(4), "")
 
     def test_get_name_of_state_without_specifications_of_names(self):
         """
@@ -178,11 +180,11 @@ class TestStandardCell(unittest.TestCase):
         """
         cell = StandardCell(6)
 
-        self.assertEqual(cell.get_name_of_state(0), '')
-        self.assertEqual(cell.get_name_of_state(1), '')
-        self.assertEqual(cell.get_name_of_state(2), '')
-        self.assertEqual(cell.get_name_of_state(3), '')
-        self.assertEqual(cell.get_name_of_state(4), '')
+        self.assertEqual(cell.get_name_of_state(0), "")
+        self.assertEqual(cell.get_name_of_state(1), "")
+        self.assertEqual(cell.get_name_of_state(2), "")
+        self.assertEqual(cell.get_name_of_state(3), "")
+        self.assertEqual(cell.get_name_of_state(4), "")
 
     def test_get_name_of_attributes(self):
         """
@@ -275,7 +277,6 @@ class TestPositionIterator(unittest.TestCase):
             self.assertLess(border_widths[1] - 1, x_pos)
             self.assertLess(x_pos, dimensions[1] + border_widths[1])
 
-
     # @unittest.skip("Implementando funcionalidad")
     def test_iter_and_next_method_2_dimensional_case_1(self):
         """
@@ -365,9 +366,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (1, 20)
         border_widths = (0, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         for position in topology:
             # aleatoriamente se escogen nuevos valores para las celulas
@@ -384,8 +387,7 @@ class TestFinite1GridTopology(unittest.TestCase):
             cell_state, cell_attributes = topology.get_cell(position)
 
             self.assertEqual(state, cell_state)
-            self.assertTrue(np.allclose(attributes, cell_attributes,
-                                        equal_nan=True))
+            self.assertTrue(np.allclose(attributes, cell_attributes, equal_nan=True))
 
     # @unittest.skip("Implementando funcionalidad")
     def test_update_cell_and_get_cell_case_2(self):
@@ -398,9 +400,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 0
         dimensions = (1, 1)
         border_widths = (0, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         for position in topology:
             # aleatoriamente se escogen nuevos valores para las celulas
@@ -434,9 +438,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 0
         dimensions = (1, 5)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         topology.set_values_from(state, None)
@@ -459,9 +465,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (1, 5)
         border_widths = (0, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
@@ -478,8 +486,7 @@ class TestFinite1GridTopology(unittest.TestCase):
         # la estructura de datos pasa a ser de lectura
         topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
-        self.assertTrue(np.allclose(topology.get_attributes(),
-                                    attributes_array))
+        self.assertTrue(np.allclose(topology.get_attributes(), attributes_array))
 
     # no se deberia permitir borde con dimension 0, cuando se implementen
     # excepciones en la libreria este test deberia ser modificado para lanzar
@@ -495,9 +502,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 5
         dimensions = (1, 1)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
@@ -514,8 +523,7 @@ class TestFinite1GridTopology(unittest.TestCase):
         # la estructura de datos pasa a ser de lectura
         topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
-        self.assertTrue(np.allclose(topology.get_attributes(),
-                                    attributes_array))
+        self.assertTrue(np.allclose(topology.get_attributes(), attributes_array))
 
     # no se deberia permitir borde con dimension 0, cuando se implementen
     # excepciones en la libreria este test deberia ser modificado para lanzar
@@ -531,9 +539,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 0
         dimensions = (1, 5)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         states = np.zeros(dimensions) + np.random.randint(1, 100)
         # se tiene 0 atributos por celula
@@ -557,9 +567,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (1, 5)
         border_widths = (0, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         states = np.zeros(dimensions) + np.random.randint(1, 100)
         attributes_array = np.random.random((*dimensions, attributes_number))
@@ -570,8 +582,7 @@ class TestFinite1GridTopology(unittest.TestCase):
         # la estructura de datos pasa a ser de lectura
         topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
-        self.assertTrue(np.allclose(topology.get_attributes(),
-                                    attributes_array))
+        self.assertTrue(np.allclose(topology.get_attributes(), attributes_array))
 
     # no se deberia permitir borde con dimension 0, cuando se implementen
     # excepciones en la libreria este test deberia ser modificado para lanzar
@@ -587,9 +598,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 5
         dimensions = (1, 1)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         states = np.zeros(dimensions) + np.random.randint(1, 100)
         attributes_array = np.random.random((*dimensions, attributes_number))
@@ -600,8 +613,7 @@ class TestFinite1GridTopology(unittest.TestCase):
         # la estructura de datos pasa a ser de lectura
         topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
-        self.assertTrue(np.allclose(topology.get_attributes(),
-                                    attributes_array))
+        self.assertTrue(np.allclose(topology.get_attributes(), attributes_array))
 
     # @unittest.skip("Implementando funcionalidad")
     def test_apply_mask_case_1(self):
@@ -614,9 +626,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         # no tiene sentido aplicar una mascara sin que halla borde, debe haber
         # un grosor de borde, al menos de las dimensiones de la mascara
         border_widths = (0, 3)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         states = np.expand_dims(np.arange(dimensions[1], dtype=np.int), axis=0)
         topology.set_values_from_configuration(states, None)
@@ -625,25 +639,26 @@ class TestFinite1GridTopology(unittest.TestCase):
         topology.flip()
 
         mask = np.array([[1, 1, 1]], dtype=np.bool)
-        neighborhoods = np.array([
-            [0, 1, 2],
-            [1, 2, 3],
-            [2, 3, 4],
-            [3, 4, 5],
-            [4, 5, 6],
-            [5, 6, 7],
-            [6, 7, 8],
-            [7, 8, 9],
-            [8, 9, 0],
-            [9, 0, 0]
-        ])
+        neighborhoods = np.array(
+            [
+                [0, 1, 2],
+                [1, 2, 3],
+                [2, 3, 4],
+                [3, 4, 5],
+                [4, 5, 6],
+                [5, 6, 7],
+                [6, 7, 8],
+                [7, 8, 9],
+                [8, 9, 0],
+                [9, 0, 0],
+            ]
+        )
 
         counter = 0
         for position in topology:
             states_n, attributes_n = topology.apply_mask(position, mask)
 
-            self.assertTrue(np.array_equal(states_n,
-                            neighborhoods[counter]))
+            self.assertTrue(np.array_equal(states_n, neighborhoods[counter]))
             self.assertIsNone(attributes_n)
             counter += 1
 
@@ -659,9 +674,11 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (1, 1)
         border_widths = (0, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         attributes_array = np.random.random((*dimensions, attributes_number))
         topology.set_values_from_configuration([[2]], attributes_array)
@@ -677,10 +694,8 @@ class TestFinite1GridTopology(unittest.TestCase):
         for position in topology:
             states_n, attributes_n = topology.apply_mask(position, mask)
 
-            self.assertTrue(np.array_equal(states_n,
-                            neighborhoods_1))
-            self.assertTrue(np.array_equal(attributes_n,
-                            neighborhoods_2))
+            self.assertTrue(np.array_equal(states_n, neighborhoods_1))
+            self.assertTrue(np.array_equal(attributes_n, neighborhoods_2))
 
     # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_1(self):
@@ -692,20 +707,28 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 0
         dimensions = (1, 7)
         border_widths = (0, 3)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         topology.set_border_values(state, None)
 
-        space = np.zeros((dimensions[0] + 2 * border_widths[0],
-                          dimensions[1] + 2 * border_widths[1]),
-                         dtype=np.int) + state
-        space[0, border_widths[1]:border_widths[1] + dimensions[1]] = 0
+        space = (
+            np.zeros(
+                (
+                    dimensions[0] + 2 * border_widths[0],
+                    dimensions[1] + 2 * border_widths[1],
+                ),
+                dtype=np.int,
+            )
+            + state
+        )
+        space[0, border_widths[1] : border_widths[1] + dimensions[1]] = 0
 
-        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
-                                       space))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer], space))
 
     # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_2(self):
@@ -717,29 +740,42 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 5
         dimensions = (1, 1)
         border_widths = (0, 7)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
         topology.set_border_values(state, attributes)
 
-        space = np.zeros((dimensions[0] + 2 * border_widths[0],
-                          dimensions[1] + 2 * border_widths[1]),
-                         dtype=np.int) + state
-        space[0, border_widths[1]:border_widths[1] + dimensions[1]] = 0
+        space = (
+            np.zeros(
+                (
+                    dimensions[0] + 2 * border_widths[0],
+                    dimensions[1] + 2 * border_widths[1],
+                ),
+                dtype=np.int,
+            )
+            + state
+        )
+        space[0, border_widths[1] : border_widths[1] + dimensions[1]] = 0
 
-        attributes_array = np.zeros((dimensions[0] + 2 * border_widths[0],
-                                     dimensions[1] + 2 * border_widths[1],
-                                     attributes_number))
+        attributes_array = np.zeros(
+            (
+                dimensions[0] + 2 * border_widths[0],
+                dimensions[1] + 2 * border_widths[1],
+                attributes_number,
+            )
+        )
         attributes_array[..., :] = attributes
-        attributes_array[0, border_widths[1]:border_widths[1] + dimensions[1], :] = 0
+        attributes_array[0, border_widths[1] : border_widths[1] + dimensions[1], :] = 0
 
-        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
-                                       space))
-        self.assertTrue(np.allclose(topology.attributes[topology.write_buffer],
-                                    attributes_array))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer], space))
+        self.assertTrue(
+            np.allclose(topology.attributes[topology.write_buffer], attributes_array)
+        )
 
     # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_3(self):
@@ -751,29 +787,42 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (1, 10)
         border_widths = (0, 3)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
         topology.set_border_values(state, attributes)
 
-        space = np.zeros((dimensions[0] + 2 * border_widths[0],
-                          dimensions[1] + 2 * border_widths[1]),
-                         dtype=np.int) + state
-        space[0, border_widths[1]:border_widths[1] + dimensions[1]] = 0
+        space = (
+            np.zeros(
+                (
+                    dimensions[0] + 2 * border_widths[0],
+                    dimensions[1] + 2 * border_widths[1],
+                ),
+                dtype=np.int,
+            )
+            + state
+        )
+        space[0, border_widths[1] : border_widths[1] + dimensions[1]] = 0
 
-        attributes_array = np.zeros((dimensions[0] + 2 * border_widths[0],
-                                     dimensions[1] + 2 * border_widths[1],
-                                     attributes_number))
+        attributes_array = np.zeros(
+            (
+                dimensions[0] + 2 * border_widths[0],
+                dimensions[1] + 2 * border_widths[1],
+                attributes_number,
+            )
+        )
         attributes_array[..., :] = attributes
-        attributes_array[0, border_widths[1]:border_widths[1] + dimensions[1], :] = 0
+        attributes_array[0, border_widths[1] : border_widths[1] + dimensions[1], :] = 0
 
-        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
-                                       space))
-        self.assertTrue(np.allclose(topology.attributes[topology.write_buffer],
-                                    attributes_array))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer], space))
+        self.assertTrue(
+            np.allclose(topology.attributes[topology.write_buffer], attributes_array)
+        )
 
 
 class TestFinite2GridTopology(unittest.TestCase):
@@ -792,9 +841,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (5, 20)
         border_widths = (1, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         for position in topology:
             # aleatoriamente se escogen nuevos valores para las celulas
@@ -811,8 +862,7 @@ class TestFinite2GridTopology(unittest.TestCase):
             cell_state, cell_attributes = topology.get_cell(position)
 
             self.assertEqual(state, cell_state)
-            self.assertTrue(np.allclose(attributes, cell_attributes,
-                                        equal_nan=True))
+            self.assertTrue(np.allclose(attributes, cell_attributes, equal_nan=True))
 
     # @unittest.skip("Implementando funcionalidad")
     def test_update_cell_and_get_cell_case_2(self):
@@ -825,9 +875,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 0
         dimensions = (5, 5)
         border_widths = (3, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         for position in topology:
             # aleatoriamente se escogen nuevos valores para las celulas
@@ -860,9 +912,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 0
         dimensions = (3, 5)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         topology.set_values_from(state, None)
@@ -885,9 +939,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (3, 5)
         border_widths = (0, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
@@ -904,8 +960,7 @@ class TestFinite2GridTopology(unittest.TestCase):
         # la estructura de datos pasa a ser de lectura
         topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
-        self.assertTrue(np.allclose(topology.get_attributes(),
-                                    attributes_array))
+        self.assertTrue(np.allclose(topology.get_attributes(), attributes_array))
 
     # no se deberia permitir borde con dimension 0, cuando se implementen
     # excepciones en la libreria este test deberia ser modificado para lanzar
@@ -921,9 +976,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 5
         dimensions = (2, 2)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
@@ -940,8 +997,7 @@ class TestFinite2GridTopology(unittest.TestCase):
         # la estructura de datos pasa a ser de lectura
         topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
-        self.assertTrue(np.allclose(topology.get_attributes(),
-                                    attributes_array))
+        self.assertTrue(np.allclose(topology.get_attributes(), attributes_array))
 
     # no se deberia permitir borde con dimension 0, cuando se implementen
     # excepciones en la libreria este test deberia ser modificado para lanzar
@@ -957,9 +1013,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 0
         dimensions = (10, 5)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         states = np.zeros(dimensions) + np.random.randint(1, 100)
         # se tiene 0 atributos por celula
@@ -983,9 +1041,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (1, 5)
         border_widths = (0, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         states = np.zeros(dimensions) + np.random.randint(1, 100)
         attributes_array = np.random.random((*dimensions, attributes_number))
@@ -996,8 +1056,7 @@ class TestFinite2GridTopology(unittest.TestCase):
         # la estructura de datos pasa a ser de lectura
         topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
-        self.assertTrue(np.allclose(topology.get_attributes(),
-                                    attributes_array))
+        self.assertTrue(np.allclose(topology.get_attributes(), attributes_array))
 
     # no se deberia permitir borde con dimension 0, cuando se implementen
     # excepciones en la libreria este test deberia ser modificado para lanzar
@@ -1013,9 +1072,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 5
         dimensions = (20, 20)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         states = np.zeros(dimensions) + np.random.randint(1, 100)
         attributes_array = np.random.random((*dimensions, attributes_number))
@@ -1026,8 +1087,7 @@ class TestFinite2GridTopology(unittest.TestCase):
         # la estructura de datos pasa a ser de lectura
         topology.flip()
         self.assertTrue(np.array_equal(topology.get_states(), states))
-        self.assertTrue(np.allclose(topology.get_attributes(),
-                                    attributes_array))
+        self.assertTrue(np.allclose(topology.get_attributes(), attributes_array))
 
     # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_1(self):
@@ -1039,21 +1099,31 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 0
         dimensions = (4, 7)
         border_widths = (0, 3)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         topology.set_border_values(state, None)
 
-        space = np.zeros((dimensions[0] + 2 * border_widths[0],
-                          dimensions[1] + 2 * border_widths[1]),
-                         dtype=np.int) + state
-        space[border_widths[0]:border_widths[0] + dimensions[0],
-              border_widths[1]:border_widths[1] + dimensions[1]] = 0
+        space = (
+            np.zeros(
+                (
+                    dimensions[0] + 2 * border_widths[0],
+                    dimensions[1] + 2 * border_widths[1],
+                ),
+                dtype=np.int,
+            )
+            + state
+        )
+        space[
+            border_widths[0] : border_widths[0] + dimensions[0],
+            border_widths[1] : border_widths[1] + dimensions[1],
+        ] = 0
 
-        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
-                                       space))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer], space))
 
     # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_2(self):
@@ -1065,31 +1135,49 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 5
         dimensions = (10, 10)
         border_widths = (12, 7)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
         topology.set_border_values(state, attributes)
 
-        space = np.zeros((dimensions[0] + 2 * border_widths[0],
-                          dimensions[1] + 2 * border_widths[1]),
-                         dtype=np.int) + state
-        space[border_widths[0]:border_widths[0] + dimensions[0],
-              border_widths[1]:border_widths[1] + dimensions[1]] = 0
+        space = (
+            np.zeros(
+                (
+                    dimensions[0] + 2 * border_widths[0],
+                    dimensions[1] + 2 * border_widths[1],
+                ),
+                dtype=np.int,
+            )
+            + state
+        )
+        space[
+            border_widths[0] : border_widths[0] + dimensions[0],
+            border_widths[1] : border_widths[1] + dimensions[1],
+        ] = 0
 
-        attributes_array = np.zeros((dimensions[0] + 2 * border_widths[0],
-                                     dimensions[1] + 2 * border_widths[1],
-                                     attributes_number))
+        attributes_array = np.zeros(
+            (
+                dimensions[0] + 2 * border_widths[0],
+                dimensions[1] + 2 * border_widths[1],
+                attributes_number,
+            )
+        )
         attributes_array[..., :] = attributes
-        attributes_array[border_widths[0]:border_widths[0] + dimensions[0],
-                         border_widths[1]:border_widths[1] + dimensions[1], :] = 0
+        attributes_array[
+            border_widths[0] : border_widths[0] + dimensions[0],
+            border_widths[1] : border_widths[1] + dimensions[1],
+            :,
+        ] = 0
 
-        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
-                                       space))
-        self.assertTrue(np.allclose(topology.attributes[topology.write_buffer],
-                                    attributes_array))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer], space))
+        self.assertTrue(
+            np.allclose(topology.attributes[topology.write_buffer], attributes_array)
+        )
 
     # @unittest.skip("Implementando funcionalidad")
     def test_set_border_values_case_3(self):
@@ -1101,31 +1189,49 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (15, 10)
         border_widths = (0, 0)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         state = np.random.randint(1, 100)
         attributes = np.random.randn(attributes_number)
         topology.set_border_values(state, attributes)
 
-        space = np.zeros((dimensions[0] + 2 * border_widths[0],
-                          dimensions[1] + 2 * border_widths[1]),
-                         dtype=np.int) + state
-        space[border_widths[0]:border_widths[0] + dimensions[0],
-              border_widths[1]:border_widths[1] + dimensions[1]] = 0
+        space = (
+            np.zeros(
+                (
+                    dimensions[0] + 2 * border_widths[0],
+                    dimensions[1] + 2 * border_widths[1],
+                ),
+                dtype=np.int,
+            )
+            + state
+        )
+        space[
+            border_widths[0] : border_widths[0] + dimensions[0],
+            border_widths[1] : border_widths[1] + dimensions[1],
+        ] = 0
 
-        attributes_array = np.zeros((dimensions[0] + 2 * border_widths[0],
-                                     dimensions[1] + 2 * border_widths[1],
-                                     attributes_number))
+        attributes_array = np.zeros(
+            (
+                dimensions[0] + 2 * border_widths[0],
+                dimensions[1] + 2 * border_widths[1],
+                attributes_number,
+            )
+        )
         attributes_array[..., :] = attributes
-        attributes_array[border_widths[0]:border_widths[0] + dimensions[0],
-                         border_widths[1]:border_widths[1] + dimensions[1], :] = 0
+        attributes_array[
+            border_widths[0] : border_widths[0] + dimensions[0],
+            border_widths[1] : border_widths[1] + dimensions[1],
+            :,
+        ] = 0
 
-        self.assertTrue(np.array_equal(topology.states[topology.write_buffer],
-                                       space))
-        self.assertTrue(np.allclose(topology.attributes[topology.write_buffer],
-                                    attributes_array))
+        self.assertTrue(np.array_equal(topology.states[topology.write_buffer], space))
+        self.assertTrue(
+            np.allclose(topology.attributes[topology.write_buffer], attributes_array)
+        )
 
     # @unittest.skip("Implementando funcionalidad")
     def test_apply_mask_case_1(self):
@@ -1138,9 +1244,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         # no tiene sentido aplicar una mascara sin que halla borde, debe haber
         # un grosor de borde, al menos de las dimensiones de la mascara
         border_widths = (2, 2)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         states = np.arange(9, dtype=np.int).reshape((3, 3))
         topology.set_values_from_configuration(states, None)
@@ -1150,24 +1258,25 @@ class TestFinite2GridTopology(unittest.TestCase):
         topology.flip()
 
         mask = np.array([[1, 1], [1, 1]], dtype=np.bool)
-        neighborhoods = np.array([
-            [0, 1, 3, 4],
-            [1, 2, 4, 5],
-            [2, 0, 5, 0],
-            [3, 4, 6, 7],
-            [4, 5, 7, 8],
-            [5, 0, 8, 0],
-            [6, 7, 0, 0],
-            [7, 8, 0, 0],
-            [8, 0, 0, 0]
-        ])
+        neighborhoods = np.array(
+            [
+                [0, 1, 3, 4],
+                [1, 2, 4, 5],
+                [2, 0, 5, 0],
+                [3, 4, 6, 7],
+                [4, 5, 7, 8],
+                [5, 0, 8, 0],
+                [6, 7, 0, 0],
+                [7, 8, 0, 0],
+                [8, 0, 0, 0],
+            ]
+        )
 
         counter = 0
         for position in topology:
             states_n, attributes_n = topology.apply_mask(position, mask)
 
-            self.assertTrue(np.array_equal(states_n,
-                            neighborhoods[counter]))
+            self.assertTrue(np.array_equal(states_n, neighborhoods[counter]))
             self.assertIsNone(attributes_n)
             counter += 1
 
@@ -1183,9 +1292,11 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes_number = 2
         dimensions = (2, 2)
         border_widths = (4, 10)
-        topology = FiniteNGridTopology(attributes_number=attributes_number,
-                                       dimensions=dimensions,
-                                       border_widths=border_widths)
+        topology = FiniteNGridTopology(
+            attributes_number=attributes_number,
+            dimensions=dimensions,
+            border_widths=border_widths,
+        )
 
         topology.set_values_from(1, [1, 1])
         topology.set_border_values(1, [1, 1])
@@ -1202,15 +1313,13 @@ class TestFinite2GridTopology(unittest.TestCase):
         for position in topology:
             states_n, attributes_n = topology.apply_mask(position, mask)
 
-            self.assertTrue(np.array_equal(states_n,
-                            neighborhoods_1))
-            self.assertTrue(np.array_equal(attributes_n,
-                            neighborhoods_2))
+            self.assertTrue(np.array_equal(states_n, neighborhoods_1))
+            self.assertTrue(np.array_equal(attributes_n, neighborhoods_2))
 
             counter += 1
 
         self.assertEqual(counter, 4)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

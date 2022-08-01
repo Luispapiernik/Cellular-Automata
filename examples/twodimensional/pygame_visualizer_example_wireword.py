@@ -1,14 +1,15 @@
-from pycellslib import Rule
-from pycellslib import Automaton
+import numpy as np
+
+from pycellslib import Automaton, Rule
 from pycellslib.cells import StandardCell
 from pycellslib.twodimensional.neighborhoods import MooreNeighborhood
 from pycellslib.twodimensional.topologies import FinitePlaneTopology
-
 from pycellslib.visualizers import pygame_visualizer as pv
-import numpy as np
+
 
 class WireWorldRules(Rule):
     """docstring for WireWorldRules"""
+
     EMPTY = 0
     ELECTRON_HEAD = 1
     ELECTRON_TAIL = 2
@@ -47,38 +48,50 @@ class WireWorldRules(Rule):
         if current_cell == WireWorldRules.ELECTRON_TAIL:
             return WireWorldRules.CONDUCTOR, None
         if current_cell == WireWorldRules.CONDUCTOR:
-            electron_heads = np.sum(cell_states[cell_states == WireWorldRules.ELECTRON_HEAD])
+            electron_heads = np.sum(
+                cell_states[cell_states == WireWorldRules.ELECTRON_HEAD]
+            )
             if electron_heads in [1, 2]:
                 return WireWorldRules.ELECTRON_HEAD, None
 
             return WireWorldRules.CONDUCTOR, None
 
         return 0, None
-        
+
 
 def wireworld():
     dimension = 25
-    cell_information = StandardCell([0, 1, 2, 3],
-                                    name_of_states=['Empty', 'Electron Head',
-                                                    'Electron Tail',
-                                                    'Conductor'])
+    cell_information = StandardCell(
+        [0, 1, 2, 3],
+        name_of_states=["Empty", "Electron Head", "Electron Tail", "Conductor"],
+    )
     topology = FinitePlaneTopology(0, dimension, dimension, 3, 3)
     rule = WireWorldRules()
 
-    automaton = Automaton(cell_information, rule, topology, name='Wire World')
+    automaton = Automaton(cell_information, rule, topology, name="Wire World")
 
-    system = pv.System(automaton, {0: pv.COLORS['BLACK'],
-                                   1: pv.COLORS['BLUE'],
-                                   2: pv.COLORS['RED'],
-                                   3: pv.COLORS['YELLOW']})
-    visualizer = pv.CellGraph(system, margin_width=40, margin_height=40,
-                              background_color=(155, 155, 155), cellwidth=20,
-                              cellheight=20, fps=5,
-                              separation_between_cells=1)
+    system = pv.System(
+        automaton,
+        {
+            0: pv.COLORS["BLACK"],
+            1: pv.COLORS["BLUE"],
+            2: pv.COLORS["RED"],
+            3: pv.COLORS["YELLOW"],
+        },
+    )
+    visualizer = pv.CellGraph(
+        system,
+        margin_width=40,
+        margin_height=40,
+        background_color=(155, 155, 155),
+        cellwidth=20,
+        cellheight=20,
+        fps=5,
+        separation_between_cells=1,
+    )
 
     visualizer.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     wireworld()
-

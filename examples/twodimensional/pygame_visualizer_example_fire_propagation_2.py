@@ -1,17 +1,17 @@
-from pycellslib import Rule
-from pycellslib import Automaton
+import matplotlib.cm as cm
+import numpy as np
+from scipy.stats import truncnorm
+
+from pycellslib import Automaton, Rule
 from pycellslib.cells import StandardCell
 from pycellslib.twodimensional.neighborhoods import NeumannNeighborhood
 from pycellslib.twodimensional.topologies import FinitePlaneTopology
-
 from pycellslib.visualizers import pygame_visualizer as pv
-import matplotlib.cm as cm
-from scipy.stats import truncnorm
-import numpy as np
 
 
 class AumentedCell(StandardCell):
     """docstring for AumentedCell"""
+
     def __init__(self, burning_states_number):
         super().__init__(burning_states_number + 1)
 
@@ -55,11 +55,12 @@ class AumentedCell(StandardCell):
         -------
         out(None): nombre del atributo, puede ser un string vacio
         """
-        return 'Age'
+        return "Age"
 
 
 class FirePropagationRules(Rule):
     """docstring for WireWorldRules"""
+
     def __init__(self, probability, burning_states_number=1):
         self.max_probability = probability
         self.neighborhood = NeumannNeighborhood(radius=1, inclusive=True)
@@ -101,7 +102,9 @@ class FirePropagationRules(Rule):
             burning_trees = np.sum(cell_states[inf_limit & sup_limit])
 
             for i in range(burning_trees):
-                if np.random.rand() > self.max_probability - truncnorm.pdf(current_cell, self.a, self.b):
+                if np.random.rand() > self.max_probability - truncnorm.pdf(
+                    current_cell, self.a, self.b
+                ):
                     return 2, None
 
         # si se esta quemando
@@ -113,7 +116,7 @@ class FirePropagationRules(Rule):
 
 def get_colors(burning_states_number):
     states_number = burning_states_number + 2 + 1
-    colors = {0: (128, 64, 0), 1: pv.COLORS['GREEN']}
+    colors = {0: (128, 64, 0), 1: pv.COLORS["GREEN"]}
 
     last_level = 0.8
     diff = last_level / (burning_states_number - 1)
@@ -130,17 +133,23 @@ def fire_propagation():
     topology = FinitePlaneTopology(1, dimension, dimension, 3, 3)
     rule = FirePropagationRules(0.7, burning_states_number)
 
-    automaton = Automaton(cell_information, rule, topology, name='Fire Propagation')
+    automaton = Automaton(cell_information, rule, topology, name="Fire Propagation")
     automaton.topology.set_values_from(1, None)
 
     system = pv.System(automaton, get_colors(burning_states_number))
-    visualizer = pv.CellGraph(system, margin_width=40, margin_height=40,
-                              background_color=(194, 155, 97), cellwidth=10,
-                              cellheight=10, fps=5,
-                              separation_between_cells=1)
+    visualizer = pv.CellGraph(
+        system,
+        margin_width=40,
+        margin_height=40,
+        background_color=(194, 155, 97),
+        cellwidth=10,
+        cellheight=10,
+        fps=5,
+        separation_between_cells=1,
+    )
 
     visualizer.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     fire_propagation()

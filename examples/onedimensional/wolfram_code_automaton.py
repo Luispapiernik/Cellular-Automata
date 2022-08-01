@@ -5,14 +5,14 @@ from pycellslib.onedimensional.topologies import FiniteLineTopology
 
 
 def show(array):
-    string = '|'
+    string = "|"
     for i in array:
         if i == 0:
-            string += ' '
+            string += " "
         else:
-            string += '*'
+            string += "*"
 
-    return string + '|'
+    return string + "|"
 
 
 def main():
@@ -31,5 +31,5 @@ def main():
         automaton.next_step()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

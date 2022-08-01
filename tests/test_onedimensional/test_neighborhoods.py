@@ -4,14 +4,17 @@ unidimensionales
 """
 
 import unittest
+
 import numpy as np
 
-from pycellslib.onedimensional.neighborhoods import LeftCellNeighborhood
-from pycellslib.onedimensional.neighborhoods import RightCellNeighborhood
-from pycellslib.onedimensional.neighborhoods import IntervalCellNeighborhood
-from pycellslib.onedimensional.neighborhoods import LeftSideNeighborhood
-from pycellslib.onedimensional.neighborhoods import RightSideNeighborhood
-from pycellslib.onedimensional.neighborhoods import BothSideNeighborhood
+from pycellslib.onedimensional.neighborhoods import (
+    BothSideNeighborhood,
+    IntervalCellNeighborhood,
+    LeftCellNeighborhood,
+    LeftSideNeighborhood,
+    RightCellNeighborhood,
+    RightSideNeighborhood,
+)
 
 
 class TestLeftCellNeighborhood(unittest.TestCase):
@@ -223,6 +226,7 @@ class TestRightSideNeighborhood(unittest.TestCase):
 
         self.assertEqual(neighborhood.get_offset(), offset)
 
+
 class TestBothSideNeighborhood(unittest.TestCase):
     """
     Tests para BothSideNeighborhood
@@ -270,5 +274,6 @@ class TestBothSideNeighborhood(unittest.TestCase):
 
         self.assertEqual(neighborhood.get_offset(), offset)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

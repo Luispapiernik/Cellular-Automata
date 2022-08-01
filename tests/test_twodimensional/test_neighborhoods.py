@@ -4,12 +4,15 @@ unidimensionales
 """
 
 import unittest
+
 import numpy as np
 
-from pycellslib.twodimensional.neighborhoods import MooreNeighborhood
-from pycellslib.twodimensional.neighborhoods import CircularNeighborhood
-from pycellslib.twodimensional.neighborhoods import L2Neighborhood
-from pycellslib.twodimensional.neighborhoods import NeumannNeighborhood
+from pycellslib.twodimensional.neighborhoods import (
+    CircularNeighborhood,
+    L2Neighborhood,
+    MooreNeighborhood,
+    NeumannNeighborhood,
+)
 
 
 class TestMooreNeighborhood(unittest.TestCase):
@@ -34,7 +37,6 @@ class TestMooreNeighborhood(unittest.TestCase):
         mask = np.ones((9, 9), dtype=np.bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
-
 
     def test_get_offset_case_1(self):
         """
@@ -126,11 +128,16 @@ class TestNeumannNeighborhood(unittest.TestCase):
         Este metodo testea el metodo get_mask con radio 4
         """
         neighborhood = NeumannNeighborhood(2, inclusive=True)
-        mask = np.array([[0, 0, 1, 0, 0],
-                         [0, 1, 1, 1, 0],
-                         [1, 1, 1, 1, 1],
-                         [0, 1, 1, 1, 0],
-                         [0, 0, 1, 0, 0]], dtype=np.bool)
+        mask = np.array(
+            [
+                [0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 0],
+                [0, 0, 1, 0, 0],
+            ],
+            dtype=np.bool,
+        )
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -139,15 +146,20 @@ class TestNeumannNeighborhood(unittest.TestCase):
         Este metodo testea el metodo get_mask con radio 4
         """
         neighborhood = NeumannNeighborhood(4, inclusive=False)
-        mask = np.array([[0, 0, 0, 0, 1, 0, 0, 0, 0],
-                         [0, 0, 0, 1, 1, 1, 0, 0, 0],
-                         [0, 0, 1, 1, 1, 1, 1, 0, 0],
-                         [0, 1, 1, 1, 1, 1, 1, 1, 0],
-                         [1, 1, 1, 1, 0, 1, 1, 1, 1],
-                         [0, 1, 1, 1, 1, 1, 1, 1, 0],
-                         [0, 0, 1, 1, 1, 1, 1, 0, 0],
-                         [0, 0, 0, 1, 1, 1, 0, 0, 0],
-                         [0, 0, 0, 0, 1, 0, 0, 0, 0]], dtype=np.bool)
+        mask = np.array(
+            [
+                [0, 0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 0, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0],
+            ],
+            dtype=np.bool,
+        )
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 

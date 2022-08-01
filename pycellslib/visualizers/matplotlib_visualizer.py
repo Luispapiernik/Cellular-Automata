@@ -3,11 +3,11 @@ Docs
 """
 
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.animation import FuncAnimation
+from matplotlib.colors import LinearSegmentedColormap
 
 
-class ColorPaletteCreator():
+class ColorPaletteCreator:
     """
     Esta clase brinda una interfaz a la funcion LinearSementedColormap, para
     la creacion de paleta usando un numero discreto de colores
@@ -19,7 +19,8 @@ class ColorPaletteCreator():
         en el formato RGBA o cualquier otro entendido por matplotlib
     name(str): nombre de la paleta de colores
     """
-    def __init__(self, colors, name=''):
+
+    def __init__(self, colors, name=""):
         max_color = max(i for i, _ in colors)
         self.colors = [(0, 0, 0)] * (max_color + 1)
 
@@ -57,13 +58,13 @@ class GameOfLifeLikePalette(ColorPaletteCreator):
     """
 
     def __init__(self, invert=False):
-        colors = [[0, 'white'], [1, 'black']]
+        colors = [[0, "white"], [1, "black"]]
 
         if invert:
             colors[0][0] = 1
             colors[1][0] = 0
 
-        super().__init__(colors, 'Game Of Life')
+        super().__init__(colors, "Game Of Life")
 
 
 def update_function(_, axes, palette, interpolation, automaton):
@@ -79,16 +80,26 @@ def update_function(_, axes, palette, interpolation, automaton):
     """
     automaton.next_step()
     states = automaton.topology.get_states()
-    img = axes.imshow(255 * states / states.max(), cmap=palette,
-                      aspect='equal', interpolation=interpolation)
-    return (img, )
+    img = axes.imshow(
+        255 * states / states.max(),
+        cmap=palette,
+        aspect="equal",
+        interpolation=interpolation,
+    )
+    return (img,)
 
 
-def configure_animation(title, fontdict={'color': 'white',
-                                         'family': 'sans-serif',
-                                         'fontweight': 'bold',
-                                         'fontsize':16},
-                        figsize=(5, 5), backgroud_color='black'):
+def configure_animation(
+    title,
+    fontdict={
+        "color": "white",
+        "family": "sans-serif",
+        "fontweight": "bold",
+        "fontsize": 16,
+    },
+    figsize=(5, 5),
+    backgroud_color="black",
+):
     """
     Esta funcion configura la animacion
     """
@@ -102,18 +113,30 @@ def configure_animation(title, fontdict={'color': 'white',
     return fig, axes
 
 
-def animate(automaton, fig, axes, palette=GameOfLifeLikePalette().cmap,
-            interpolation='None', frames=None, time_per_frame=50,
-            save_count=None):
+def animate(
+    automaton,
+    fig,
+    axes,
+    palette=GameOfLifeLikePalette().cmap,
+    interpolation="None",
+    frames=None,
+    time_per_frame=50,
+    save_count=None,
+):
     """
     Esta funcion corre una animacion previamente configurada
     """
-    axes.imshow(255 * automaton.topology.get_states(), cmap=palette,
-                interpolation=interpolation)
-    animation = FuncAnimation(fig, update_function, frames=frames,
-                              fargs=(axes, palette, interpolation, automaton),
-                              interval=time_per_frame,
-                              save_count=save_count)
+    axes.imshow(
+        255 * automaton.topology.get_states(), cmap=palette, interpolation=interpolation
+    )
+    animation = FuncAnimation(
+        fig,
+        update_function,
+        frames=frames,
+        fargs=(axes, palette, interpolation, automaton),
+        interval=time_per_frame,
+        save_count=save_count,
+    )
     plt.show()
 
     return animation

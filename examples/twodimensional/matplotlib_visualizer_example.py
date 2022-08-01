@@ -4,7 +4,6 @@ from pycellslib import Automaton
 from pycellslib.cells import LifeLikeCell
 from pycellslib.twodimensional.rules import BSNotationRule
 from pycellslib.twodimensional.topologies import FinitePlaneTopology
-
 from pycellslib.visualizers import matplotlib_visualizer as mv
 
 
@@ -21,14 +20,17 @@ def main():
     rule = BSNotationRule([3], [2, 3], radius=1)
 
     automaton = Automaton(cell_information, rule, topology)
-    automaton.topology.set_values_from_configuration(get_random_configuration(dimension), None)
+    automaton.topology.set_values_from_configuration(
+        get_random_configuration(dimension), None
+    )
 
-    fig, axes = mv.configure_animation('Game Of Life')
-    animation = mv.animate(automaton, fig, axes, frames=1000, time_per_frame=50,
-                           save_count=None)
+    fig, axes = mv.configure_animation("Game Of Life")
+    animation = mv.animate(
+        automaton, fig, axes, frames=1000, time_per_frame=50, save_count=None
+    )
 
-    animation.save('prueba.mp4')
+    animation.save("prueba.mp4")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

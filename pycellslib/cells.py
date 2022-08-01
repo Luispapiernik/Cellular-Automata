@@ -24,7 +24,7 @@ class StandardCell(CellInformation):
         iterable. Pero start toma un valor entero, se usa para especificar
         el rango en el que estan los estados
     end(int|None): cuando el parametro start es un entero, este parametro es
-        usado para especificar el rango en el que estan los estados 
+        usado para especificar el rango en el que estan los estados
     step(int|None): cuando el parametro start es un entero, este parametro es
         usado para especificar que enteros en el rango especificado hacen
         parte de los posibles estados
@@ -32,8 +32,9 @@ class StandardCell(CellInformation):
     name_of_states(list(str)|tuple(str)|None): nombre de cada estado
     """
 
-    def __init__(self, start=None, end=None, step=None, default_state=None,
-                 name_of_states=None):
+    def __init__(
+        self, start=None, end=None, step=None, default_state=None, name_of_states=None
+    ):
         if isinstance(start, list):
             self.states = start
         else:
@@ -44,7 +45,7 @@ class StandardCell(CellInformation):
 
         self.name_of_states = name_of_states or []
         diff = len(self.states) - len(self.name_of_states)
-        self.name_of_states.extend([''] * diff)
+        self.name_of_states.extend([""] * diff)
 
     def get_states(self):
         """
@@ -132,4 +133,4 @@ class LifeLikeCell(StandardCell):
     """
 
     def __init__(self):
-        super().__init__([0, 1], name_of_states=['Dead', 'Alive'])
+        super().__init__([0, 1], name_of_states=["Dead", "Alive"])

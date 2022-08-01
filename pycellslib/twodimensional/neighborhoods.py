@@ -58,7 +58,7 @@ class MooreNeighborhood(Neighborhood):
 
 class CircularNeighborhood(Neighborhood):
     """docstring for CircularNeighborhood"""
- 
+
 
 class L2Neighborhood(Neighborhood):
     """docstring for L2Neighborhood"""
@@ -78,9 +78,11 @@ class NeumannNeighborhood(Neighborhood):
 
     def __init__(self, radius=1, inclusive=True):
         self.radius = radius
-        xx, yy = np.meshgrid(np.arange(-radius, radius + 1, 1, dtype=np.int),
-                             np.arange(-radius, radius + 1, 1, dtype=np.int),
-                             sparse=True)
+        xx, yy = np.meshgrid(
+            np.arange(-radius, radius + 1, 1, dtype=np.int),
+            np.arange(-radius, radius + 1, 1, dtype=np.int),
+            sparse=True,
+        )
         self.mask = np.abs(xx) + np.abs(yy)
         self.mask = self.mask <= radius
         if not inclusive:

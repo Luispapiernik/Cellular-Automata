@@ -1,10 +1,11 @@
-from abc import ABCMeta, abstractmethod
 import curses as c
+import os
 import time
+from abc import ABCMeta, abstractmethod
+
 import numpy as np
 
-import os
-os.environ.setdefault('ESCDELAY', '25')
+os.environ.setdefault("ESCDELAY", "25")
 
 
 # indice de colores de curses
@@ -20,9 +21,12 @@ QUIT = 4
 
 class TestAutomata:
     """docstring for TestAutomata"""
+
     def __init__(self):
-        self.states = [np.zeros((13, 13), dtype=np.int),
-                       np.zeros((13, 13), dtype=np.int)]
+        self.states = [
+            np.zeros((13, 13), dtype=np.int),
+            np.zeros((13, 13), dtype=np.int),
+        ]
 
         # self.states[0][5:8, 5:8] = [[0, 1, 0], [1, 1, 1], [0, 1, 0]]
         # self.states[0][5:8, 5:8] = [[0, 1, 0], [1, 1, 1], [0, 1, 0]]
@@ -38,13 +42,13 @@ class TestAutomata:
 
 class Writable:
     """docstring for Writable"""
+
     def __init__(self, text, position):
         self.text = text
         self.position = position
 
     def write(self, window):
-        """
-        """
+        """ """
         height, width = window.getmaxyx()
 
         for y in range(len(self.text)):
@@ -59,44 +63,42 @@ class Writable:
 
 class Panel(metaclass=ABCMeta):
     """docstring for Panel"""
+
     @abstractmethod
     def handle_input(self, char):
-        """
-        """
+        """ """
 
     @abstractmethod
     def write(self, window):
-        """
-        """
+        """ """
 
 
 class Window(metaclass=ABCMeta):
     """"""
+
     @abstractmethod
     def handle_input(self, char):
-        """
-        """
+        """ """
 
     @abstractmethod
     def write(self):
-        """
-        """
+        """ """
 
 
 class ConfigurationInformationPanel(Panel):
     """docstring for ConfigurationInformation"""
+
     def __init__(self, window):
         self.window = window
-        self.message = Writable(['Informacion', 'de configuraciones',
-                                 'de la simulacion'], (1, 1))
+        self.message = Writable(
+            ["Informacion", "de configuraciones", "de la simulacion"], (1, 1)
+        )
 
     def handle_input(self, char):
-        """
-        """
+        """ """
 
     def write(self):
-        """
-        """
+        """ """
         self.window.box()
         self.message.write(self.window)
         self.window.refresh()
@@ -104,18 +106,16 @@ class ConfigurationInformationPanel(Panel):
 
 class SimulationInformationPanel(Panel):
     """docstring for SimulationInformation"""
+
     def __init__(self, window):
         self.window = window
-        self.message = Writable(['Informacion',
-                                 'de la simulacion'], (1, 1))
+        self.message = Writable(["Informacion", "de la simulacion"], (1, 1))
 
     def handle_input(self, char):
-        """
-        """
+        """ """
 
     def write(self):
-        """
-        """
+        """ """
         self.window.box()
         self.message.write(self.window)
         self.window.refresh()
@@ -123,34 +123,32 @@ class SimulationInformationPanel(Panel):
 
 class SimulationPanel(Panel):
     """docstring for SimulationPanel"""
+
     def __init__(self, window, automata):
         self.window = window
         self.automata = automata
-        self.states = Writable('', (1, 1))
+        self.states = Writable("", (1, 1))
 
     def states_to_string(self, states):
         string = []
 
         for i in range(len(states)):
-            line = ''
+            line = ""
             for j in range(len(states[i])):
                 if states[i][j] == 1:
-                    line += '*'
+                    line += "*"
                 else:
-                    line += ' '
+                    line += " "
 
             string.append(line)
 
         return string
 
-
     def handle_input(self, char):
-        """
-        """
+        """ """
 
     def write(self):
-        """
-        """
+        """ """
         self.window.box()
         self.states.text = self.states_to_string(self.automata.get_states())
         self.states.write(self.window)
@@ -159,6 +157,7 @@ class SimulationPanel(Panel):
 
 class SimulationWindow(Window):
     """docstring for SimulationWindow"""
+
     def __init__(self, stdscr, automata):
         self.stdscr = stdscr
         height, width = self.stdscr.getmaxyx()
@@ -172,18 +171,27 @@ class SimulationWindow(Window):
         # ventanas de los paneles
         height_simulation_panel = height - height_simulation_information_panel
         width_simulation_panel = width - width_configuration_information_panel
-        simulation_panel = c.newwin(height_simulation_panel,
-                                    width_simulation_panel, 1, 1)
-        configuration_information_panel = c.newwin(height,
-                                                   width_configuration_information_panel,
-                                                   1, width_simulation_panel + 1)
-        simulation_information_panel = c.newwin(height_simulation_information_panel,
-                                                width_simulation_panel, height_simulation_panel + 1, 1)
+        simulation_panel = c.newwin(
+            height_simulation_panel, width_simulation_panel, 1, 1
+        )
+        configuration_information_panel = c.newwin(
+            height, width_configuration_information_panel, 1, width_simulation_panel + 1
+        )
+        simulation_information_panel = c.newwin(
+            height_simulation_information_panel,
+            width_simulation_panel,
+            height_simulation_panel + 1,
+            1,
+        )
 
         # paneles
         self.simulation_panel = SimulationPanel(simulation_panel, automata)
-        self.configuration_information_panel = ConfigurationInformationPanel(configuration_information_panel)
-        self.simulation_information_panel = SimulationInformationPanel(simulation_information_panel)
+        self.configuration_information_panel = ConfigurationInformationPanel(
+            configuration_information_panel
+        )
+        self.simulation_information_panel = SimulationInformationPanel(
+            simulation_information_panel
+        )
 
     def handle_input(self, char):
         if char == 27:  # ESC
@@ -200,9 +208,10 @@ class SimulationWindow(Window):
 
 class ConfigurationWindow(Window):
     """docstring for ConfigurationWindow"""
+
     def __init__(self, stdscr):
         self.stdscr = stdscr
-        self.message = Writable(['Configuration'], (10, 10))
+        self.message = Writable(["Configuration"], (10, 10))
 
     def handle_input(self, char):
         if char == 27:  # ESC
@@ -218,7 +227,7 @@ class ConfigurationWindow(Window):
 class CreditWindow(Window):
     def __init__(self, stdscr):
         self.stdscr = stdscr
-        self.message = Writable(['Luis Papiernik es el mejor'], (10, 10))
+        self.message = Writable(["Luis Papiernik es el mejor"], (10, 10))
 
     def handle_input(self, char):
         if char == 27:  # ESC
@@ -233,12 +242,15 @@ class CreditWindow(Window):
 
 class PresentationWindow(Window):
     """docstring for PresentationWindow"""
+
     def __init__(self, stdscr):
         self.stdscr = stdscr
-        self.buttons = [Writable(['Play'], (10, 10)),
-                        Writable(['Configuration'], (11, 10)),
-                        Writable(['Credit'], (12, 10)),
-                        Writable(['Quit'], (13, 10))]
+        self.buttons = [
+            Writable(["Play"], (10, 10)),
+            Writable(["Configuration"], (11, 10)),
+            Writable(["Credit"], (12, 10)),
+            Writable(["Quit"], (13, 10)),
+        ]
 
         self.linter_index = 0
 
@@ -253,8 +265,7 @@ class PresentationWindow(Window):
             return QUIT
 
     def handle_input(self, char):
-        """
-        """
+        """ """
         if char == 10:  # ENTER
             return self.launch_event()
         if char == 259:  # UP
@@ -264,8 +275,7 @@ class PresentationWindow(Window):
         self.linter_index %= 4
 
     def write(self):
-        """
-        """
+        """ """
         for i in range(4):
             if self.linter_index == i:
                 self.stdscr.attron(c.color_pair(COLOR_SELECTED_ELEMENT))
@@ -394,7 +404,7 @@ class CursesVisualizer:
         c.endwin()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         visualizer = CursesVisualizer(TestAutomata())
 

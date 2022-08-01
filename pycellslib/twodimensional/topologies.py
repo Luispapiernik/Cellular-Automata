@@ -20,7 +20,7 @@ class FinitePlaneTopology(FiniteNGridTopology):
     border_height(int): alto de la frontera
     """
 
-    def __init__(self, attributes_number, width, height, border_width,
-                 border_height):
-        super().__init__(attributes_number, (height, width),
-                         (border_height, border_width))
+    def __init__(self, attributes_number, width, height, border_width, border_height):
+        super().__init__(
+            attributes_number, (height, width), (border_height, border_width)
+        )

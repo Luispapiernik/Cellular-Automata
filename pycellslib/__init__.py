@@ -9,6 +9,7 @@ entre si (con el objeto Automata)
 """
 
 from abc import ABCMeta, abstractmethod
+
 import numpy as np
 
 
@@ -27,7 +28,7 @@ class InitializationWithoutParametersError(PyCellsLibError):
     """
 
     def __init__(self, class_name):
-        msg = 'No se puede instanciar {} sin parametros'.format(class_name)
+        msg = f"No se puede instanciar {class_name} sin parametros"
         super().__init__(msg)
 
 
@@ -38,7 +39,7 @@ class InvalidParameterError(PyCellsLibError):
     """
 
     def __init__(self, reason_msg):
-        msg = 'Parametro invalido, {}'.format(reason_msg)
+        msg = f"Parametro invalido, {reason_msg}"
         super().__init__(msg)
 
 
@@ -100,6 +101,7 @@ class CellInformation(metaclass=ABCMeta):
         out(list|ndarray|None): valores por defecto de los atributos de la
             celula.
         """
+
     # con el objetivo de obtener y mostrar informacion del automata, como
     # densidad o flujo de celulas en un estado, ... se nombran los estados
     @abstractmethod
@@ -157,6 +159,7 @@ class Topology(metaclass=ABCMeta):
     objetivo es el de hacer que todas las celulas actualizables tengan la
     misma condicion para las vecindades)
     """
+
     @abstractmethod
     def get_offset(self):
         """
@@ -388,7 +391,7 @@ class Automaton:
     atributos, flujos, ...) del automata
     """
 
-    def __init__(self, cell_information, rule, topology, name=''):
+    def __init__(self, cell_information, rule, topology, name=""):
         self.cell_information = cell_information
         self.rule = rule
         self.topology = topology
@@ -442,18 +445,18 @@ class Automaton:
         self.topology.flip()
 
         for position in self.topology:
-            mask_position = tuple(position[i] + self.offset[i]
-                                  for i in range(len(position)))
+            mask_position = tuple(
+                position[i] + self.offset[i] for i in range(len(position))
+            )
 
-            cells, attributes = self.topology.apply_mask(mask_position,
-                                             self.mask)
+            cells, attributes = self.topology.apply_mask(mask_position, self.mask)
 
             cell, attributes = self.rule.apply_rule(cells, attributes)
 
             self.topology.update_cell(position, cell, attributes)
 
 
-class PositionIterator(object):
+class PositionIterator:
     """
     Esta clase representa un iterador sobre posiciones permitidas en el
     espacio
@@ -463,6 +466,7 @@ class PositionIterator(object):
     dimensions(ndarray(int)): dimensiones del espacio
     border_widths(ndarray(int)): dimensiones de la frontera del espacio
     """
+
     def __init__(self, dimensions, border_widths):
         self.dimensions = dimensions
         # dimensiones de la frontera
@@ -522,20 +526,25 @@ class FiniteNGridTopology(Topology):
         self.real_dimensions = self.dimensions + 2 * self.border_widths
 
         # subregion del espacio completo, sin considerar la frontera
-        self.subshape = tuple(slice(self.border_widths[i],
-                                    self.dimensions[i] + self.border_widths[i])
-                              for i in range(self.dimensions.size))
+        self.subshape = tuple(
+            slice(self.border_widths[i], self.dimensions[i] + self.border_widths[i])
+            for i in range(self.dimensions.size)
+        )
 
         # el indice 0 corresponde al buffer 1 y el indice 1 corresponde al
         # buffer 2
-        self.states = [np.zeros(self.real_dimensions, dtype=np.int),
-                       np.zeros(self.real_dimensions, dtype=np.int)]
+        self.states = [
+            np.zeros(self.real_dimensions, dtype=np.int),
+            np.zeros(self.real_dimensions, dtype=np.int),
+        ]
 
         # si se tienen 0 atributos, entonces no hace falta crear un array
         self.attributes = None
         if attributes_number != 0:
-            self.attributes = [np.zeros((*self.real_dimensions, attributes_number), dtype=np.float),
-                               np.zeros((*self.real_dimensions, attributes_number), dtype=np.float)]
+            self.attributes = [
+                np.zeros((*self.real_dimensions, attributes_number), dtype=np.float),
+                np.zeros((*self.real_dimensions, attributes_number), dtype=np.float),
+            ]
 
         # estos atributos llevan la cuenta de que buffer se usa para lectura y
         # que buffer se usa para escritura
@@ -716,8 +725,10 @@ class FiniteNGridTopology(Topology):
             celulas no tienen atributos se retorna None
         """
         # se extrae la region en donde se aplicara la mascara
-        subshape = tuple(slice(position[i], position[i] + mask.shape[i])
-                         for i in range(len(mask.shape)))
+        subshape = tuple(
+            slice(position[i], position[i] + mask.shape[i])
+            for i in range(len(mask.shape))
+        )
 
         states = self.states[self.read_buffer][subshape][mask]
 

@@ -27,7 +27,7 @@ class WolframCodeRule(Rule):
         self.base_elements = self.base ** np.arange(size - 1, -1, -1)
 
         # todas las posibles configuraciones de las vecindades
-        self.neighborhood_configurations = self.base ** size
+        self.neighborhood_configurations = self.base**size
         self.neighborhood = MooreNeighborhood(neighborhood_radius)
 
         # la regla se pasa como un numero entero, que tiene que ser traducida
@@ -49,7 +49,7 @@ class WolframCodeRule(Rule):
         Este metodo retorna la maxima regla permitida con el numero de estados
         y la vecindad actual
         """
-        return self.base ** self.neighborhood_configurations - 1
+        return self.base**self.neighborhood_configurations - 1
 
     def get_base_representation(self, number):
         """
@@ -72,7 +72,7 @@ class WolframCodeRule(Rule):
         # configuraciones de los vecinos, entonces se esta pasando una regla
         # que no esta definida, no tiene sentido en la base actual
         if len(base_number) > self.neighborhood_configurations:
-            raise Exception('Fuera de rango')
+            raise Exception("Fuera de rango")
 
         # la lista con la representacion del numero siempre debe tener la
         # longitud determinada por el numero de configuraciones posibles de los
@@ -119,4 +119,9 @@ class WolframCodeRule(Rule):
         """
         neighborhood_configuration = self.base_representation_to_int(cell_states)
 
-        return self.rule[self.neighborhood_configurations - 1 - neighborhood_configuration], None
+        return (
+            self.rule[
+                self.neighborhood_configurations - 1 - neighborhood_configuration
+            ],
+            None,
+        )
