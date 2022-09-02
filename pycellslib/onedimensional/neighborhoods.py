@@ -11,9 +11,12 @@ En este modulo se implementan varios tipos de vecindarios usados en la
 definicion de automatas celulares unodimensionales
 """
 
-import numpy as np
+from typing import Tuple
 
-from pycellslib import Neighborhood
+import numpy as np
+import numpy.typing as npt
+
+from pycellslib.core import Neighborhood
 
 
 class LeftCellNeighborhood(Neighborhood):
@@ -28,14 +31,14 @@ class LeftCellNeighborhood(Neighborhood):
         en caso contrario
     """
 
-    def __init__(self, distance=1, inclusive=True):
-        self.mask = np.zeros((1, 1 + distance), dtype=np.bool)
+    def __init__(self, distance: int = 1, inclusive: bool = True) -> None:
+        self.mask = np.zeros((1, 1 + distance), dtype=bool)
         self.mask[0, 0] = 1
 
         if inclusive:
             self.mask[0, -1] = 1
 
-    def get_mask(self):
+    def get_mask(self) -> npt.NDArray[np.int]:
         """
         Este metodo retorna la mascara que define la vecindad de una celula
 
@@ -45,7 +48,7 @@ class LeftCellNeighborhood(Neighborhood):
         """
         return self.mask
 
-    def get_offset(self):
+    def get_offset(self) -> Tuple[int, int]:
         """
         Este metodo retorna el offset de la mascara
 
@@ -71,7 +74,7 @@ class RightCellNeighborhood(Neighborhood):
     """
 
     def __init__(self, distance=1, inclusive=True):
-        self.mask = np.zeros((1, 1 + distance), dtype=np.bool)
+        self.mask = np.zeros((1, 1 + distance), dtype=bool)
         self.mask[0, -1] = 1
 
         if inclusive:
@@ -115,7 +118,7 @@ class IntervalCellNeighborhood(Neighborhood):
 
     def __init__(self, left_distance=1, right_distance=1, inclusive=True):
         size = left_distance + 1 + right_distance
-        self.mask = np.zeros((1, size), dtype=np.bool)
+        self.mask = np.zeros((1, size), dtype=bool)
 
         self.mask[0, 0] = 1
         self.mask[0, -1] = 1
@@ -158,7 +161,7 @@ class LeftSideNeighborhood(Neighborhood):
     """
 
     def __init__(self, distance=1, inclusive=True):
-        self.mask = np.ones((1, 1 + distance), dtype=np.bool)
+        self.mask = np.ones((1, 1 + distance), dtype=bool)
 
         if not inclusive:
             self.mask[0, -1] = 0
@@ -199,7 +202,7 @@ class RightSideNeighborhood(Neighborhood):
     """
 
     def __init__(self, distance=1, inclusive=True):
-        self.mask = np.ones((1, 1 + distance), dtype=np.bool)
+        self.mask = np.ones((1, 1 + distance), dtype=bool)
 
         if not inclusive:
             self.mask[0, 0] = 0
@@ -241,7 +244,7 @@ class BothSideNeighborhood(Neighborhood):
 
     def __init__(self, left_distance=1, right_distance=1, inclusive=True):
         size = left_distance + 1 + right_distance
-        self.mask = np.ones((1, size), dtype=np.bool)
+        self.mask = np.ones((1, size), dtype=bool)
 
         if not inclusive:
             self.mask[0, left_distance] = 0

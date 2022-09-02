@@ -9,13 +9,13 @@ import unittest
 
 import numpy as np
 
-from pycellslib import (
-    FiniteNGridTopology,
+from pycellslib.cells import StandardCell
+from pycellslib.core import FiniteNGridTopology
+from pycellslib.errors import (
     InitializationWithoutParametersError,
     InvalidParameterError,
-    PositionIterator,
 )
-from pycellslib.cells import StandardCell
+from pycellslib.utils import PositionIterator
 
 
 class TestStandardCell(unittest.TestCase):
@@ -216,10 +216,10 @@ class TestPositionIterator(unittest.TestCase):
         # para el primer eje
         # el grid unidimensional esta embebido en un espacio 2 dimensional
         # por eso la primera componente vale 1
-        dimensions = np.array((1, 10), dtype=np.int)
+        dimensions = np.array((1, 10), dtype=int)
         # la primera componente no tiene significado, solo informa del
         # embebimiento que se hace
-        border_widths = np.array((0, 3), dtype=np.int)
+        border_widths = np.array((0, 3), dtype=int)
 
         for (y_pos, x_pos) in PositionIterator(dimensions, border_widths):
             # el primer eje en las dimensiones siempre vale 1, por tanto la
@@ -241,8 +241,8 @@ class TestPositionIterator(unittest.TestCase):
         # solo tiene tamaño 1, y en el primer eje el grosor no significa nada
         # por tante no se deberia permitir tener un grosor diferente de cero
         # para el primer eje
-        dimensions = np.array((1, 1), dtype=np.int)
-        border_widths = np.array((0, 5), dtype=np.int)
+        dimensions = np.array((1, 1), dtype=int)
+        border_widths = np.array((0, 5), dtype=int)
 
         for (y_pos, x_pos) in PositionIterator(dimensions, border_widths):
             # el primer eje en las dimensiones siempre vale 1, por tanto la
@@ -264,8 +264,8 @@ class TestPositionIterator(unittest.TestCase):
         # solo tiene tamaño 1, y en el primer eje el grosor no significa nada
         # por tante no se deberia permitir tener un grosor diferente de cero
         # para el primer eje
-        dimensions = np.array((1, 1), dtype=np.int)
-        border_widths = np.array((0, 0), dtype=np.int)
+        dimensions = np.array((1, 1), dtype=int)
+        border_widths = np.array((0, 0), dtype=int)
 
         for (y_pos, x_pos) in PositionIterator(dimensions, border_widths):
             # el primer eje en las dimensiones siempre vale 1, por tanto la
@@ -283,8 +283,8 @@ class TestPositionIterator(unittest.TestCase):
         Este metodo testea el metodo __iter__ y __next__ en el caso de tener
         un espacio de dimensiones (4, 3) y una frontera de dimensiones (13, 10)
         """
-        dimensions = np.array((4, 3), dtype=np.int)
-        border_widths = np.array((13, 10), dtype=np.int)
+        dimensions = np.array((4, 3), dtype=int)
+        border_widths = np.array((13, 10), dtype=int)
 
         for (y_pos, x_pos) in PositionIterator(dimensions, border_widths):
             # todas las posiciones deben estar en un rango donde no se
@@ -301,8 +301,8 @@ class TestPositionIterator(unittest.TestCase):
         Este metodo testea el metodo __iter__ y __next__ en el caso de tener
         un espacio de dimensiones (1, 1) y una frontera de dimensiones (5, 5)
         """
-        dimensions = np.array((1, 1), dtype=np.int)
-        border_widths = np.array((5, 5), dtype=np.int)
+        dimensions = np.array((1, 1), dtype=int)
+        border_widths = np.array((5, 5), dtype=int)
 
         for (y_pos, x_pos) in PositionIterator(dimensions, border_widths):
             # todas las posiciones deben estar en un rango donde no se
@@ -319,8 +319,8 @@ class TestPositionIterator(unittest.TestCase):
         Este metodo testea el metodo __iter__ y __next__ en el caso de tener
         un espacio de dimensiones (1, 1) y una frontera de dimensiones (0, 5)
         """
-        dimensions = np.array((1, 1), dtype=np.int)
-        border_widths = np.array((0, 5), dtype=np.int)
+        dimensions = np.array((1, 1), dtype=int)
+        border_widths = np.array((0, 5), dtype=int)
 
         for (y_pos, x_pos) in PositionIterator(dimensions, border_widths):
             # todas las posiciones deben estar en un rango donde no se
@@ -337,8 +337,8 @@ class TestPositionIterator(unittest.TestCase):
         Este metodo testea el metodo __iter__ y __next__ en el caso de tener
         un espacio de dimensiones (1, 1) y una frontera de dimensiones (5, 5)
         """
-        dimensions = np.array((10, 1), dtype=np.int)
-        border_widths = np.array((0, 0), dtype=np.int)
+        dimensions = np.array((10, 1), dtype=int)
+        border_widths = np.array((0, 0), dtype=int)
 
         for (y_pos, x_pos) in PositionIterator(dimensions, border_widths):
             # todas las posiciones deben estar en un rango donde no se
@@ -447,7 +447,7 @@ class TestFinite1GridTopology(unittest.TestCase):
         state = np.random.randint(1, 100)
         topology.set_values_from(state, None)
 
-        states = np.zeros(dimensions, dtype=np.int) + state
+        states = np.zeros(dimensions, dtype=int) + state
         # para leer de la estructura de datos en la que se actualizaron las
         # celulas se deben invertir los papeles usando el metodo flip, asi
         # la estructura de datos pasa a ser de lectura
@@ -475,7 +475,7 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes = np.random.randn(attributes_number)
         topology.set_values_from(state, attributes)
 
-        states = np.zeros(dimensions, dtype=np.int) + state
+        states = np.zeros(dimensions, dtype=int) + state
         # el arreglo de atributos no debe necesariamente estar lleno de ceros
         # en los bordes, se agrega aleatoriedad al sumar state
         attributes_array = np.zeros((*dimensions, attributes_number)) + state
@@ -512,7 +512,7 @@ class TestFinite1GridTopology(unittest.TestCase):
         attributes = np.random.randn(attributes_number)
         topology.set_values_from(state, attributes)
 
-        states = np.zeros(dimensions, dtype=np.int) + state
+        states = np.zeros(dimensions, dtype=int) + state
         # el arreglo de atributos no debe necesariamente estar lleno de ceros
         # en los bordes, se agrega aleatoriedad al sumar state
         attributes_array = np.zeros((*dimensions, attributes_number)) + state
@@ -632,13 +632,13 @@ class TestFinite1GridTopology(unittest.TestCase):
             border_widths=border_widths,
         )
 
-        states = np.expand_dims(np.arange(dimensions[1], dtype=np.int), axis=0)
+        states = np.expand_dims(np.arange(dimensions[1], dtype=int), axis=0)
         topology.set_values_from_configuration(states, None)
         # para leer de la estructura de datos en la que se actualizaron las
         # celulas se deben invertir los papeles usando el metodo flip
         topology.flip()
 
-        mask = np.array([[1, 1, 1]], dtype=np.bool)
+        mask = np.array([[1, 1, 1]], dtype=bool)
         neighborhoods = np.array(
             [
                 [0, 1, 2],
@@ -686,8 +686,8 @@ class TestFinite1GridTopology(unittest.TestCase):
         # celulas se deben invertir los papeles usando el metodo flip
         topology.flip()
 
-        mask = np.array([[1, 1, 1]], dtype=np.bool)
-        neighborhoods_1 = np.array([2, 0, 0], dtype=np.int)
+        mask = np.array([[1, 1, 1]], dtype=bool)
+        neighborhoods_1 = np.array([2, 0, 0], dtype=int)
 
         neighborhoods_2 = np.array([attributes_array[0, 0], [0, 0], [0, 0]])
 
@@ -722,7 +722,7 @@ class TestFinite1GridTopology(unittest.TestCase):
                     dimensions[0] + 2 * border_widths[0],
                     dimensions[1] + 2 * border_widths[1],
                 ),
-                dtype=np.int,
+                dtype=int,
             )
             + state
         )
@@ -756,7 +756,7 @@ class TestFinite1GridTopology(unittest.TestCase):
                     dimensions[0] + 2 * border_widths[0],
                     dimensions[1] + 2 * border_widths[1],
                 ),
-                dtype=np.int,
+                dtype=int,
             )
             + state
         )
@@ -803,7 +803,7 @@ class TestFinite1GridTopology(unittest.TestCase):
                     dimensions[0] + 2 * border_widths[0],
                     dimensions[1] + 2 * border_widths[1],
                 ),
-                dtype=np.int,
+                dtype=int,
             )
             + state
         )
@@ -921,7 +921,7 @@ class TestFinite2GridTopology(unittest.TestCase):
         state = np.random.randint(1, 100)
         topology.set_values_from(state, None)
 
-        states = np.zeros(dimensions, dtype=np.int) + state
+        states = np.zeros(dimensions, dtype=int) + state
         # para leer de la estructura de datos en la que se actualizaron las
         # celulas se deben invertir los papeles usando el metodo flip, asi
         # la estructura de datos pasa a ser de lectura
@@ -949,7 +949,7 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes = np.random.randn(attributes_number)
         topology.set_values_from(state, attributes)
 
-        states = np.zeros(dimensions, dtype=np.int) + state
+        states = np.zeros(dimensions, dtype=int) + state
         # el arreglo de atributos no debe necesariamente estar lleno de ceros
         # en los bordes, se agrega aleatoriedad al sumar state
         attributes_array = np.zeros((*dimensions, attributes_number)) + state
@@ -986,7 +986,7 @@ class TestFinite2GridTopology(unittest.TestCase):
         attributes = np.random.randn(attributes_number)
         topology.set_values_from(state, attributes)
 
-        states = np.zeros(dimensions, dtype=np.int) + state
+        states = np.zeros(dimensions, dtype=int) + state
         # el arreglo de atributos no debe necesariamente estar lleno de ceros
         # en los bordes, se agrega aleatoriedad al sumar state
         attributes_array = np.zeros((*dimensions, attributes_number)) + state
@@ -1114,7 +1114,7 @@ class TestFinite2GridTopology(unittest.TestCase):
                     dimensions[0] + 2 * border_widths[0],
                     dimensions[1] + 2 * border_widths[1],
                 ),
-                dtype=np.int,
+                dtype=int,
             )
             + state
         )
@@ -1151,7 +1151,7 @@ class TestFinite2GridTopology(unittest.TestCase):
                     dimensions[0] + 2 * border_widths[0],
                     dimensions[1] + 2 * border_widths[1],
                 ),
-                dtype=np.int,
+                dtype=int,
             )
             + state
         )
@@ -1205,7 +1205,7 @@ class TestFinite2GridTopology(unittest.TestCase):
                     dimensions[0] + 2 * border_widths[0],
                     dimensions[1] + 2 * border_widths[1],
                 ),
-                dtype=np.int,
+                dtype=int,
             )
             + state
         )
@@ -1250,14 +1250,14 @@ class TestFinite2GridTopology(unittest.TestCase):
             border_widths=border_widths,
         )
 
-        states = np.arange(9, dtype=np.int).reshape((3, 3))
+        states = np.arange(9, dtype=int).reshape((3, 3))
         topology.set_values_from_configuration(states, None)
         topology.set_border_values(0, None)
         # para leer de la estructura de datos en la que se actualizaron las
         # celulas se deben invertir los papeles usando el metodo flip
         topology.flip()
 
-        mask = np.array([[1, 1], [1, 1]], dtype=np.bool)
+        mask = np.array([[1, 1], [1, 1]], dtype=bool)
         neighborhoods = np.array(
             [
                 [0, 1, 3, 4],
@@ -1304,8 +1304,8 @@ class TestFinite2GridTopology(unittest.TestCase):
         # celulas se deben invertir los papeles usando el metodo flip
         topology.flip()
 
-        mask = np.array([[1, 1], [1, 1]], dtype=np.bool)
-        neighborhoods_1 = np.array([1, 1, 1, 1], dtype=np.int)
+        mask = np.array([[1, 1], [1, 1]], dtype=bool)
+        neighborhoods_1 = np.array([1, 1, 1, 1], dtype=int)
 
         neighborhoods_2 = np.array([[1, 1], [1, 1], [1, 1], [1, 1]])
 

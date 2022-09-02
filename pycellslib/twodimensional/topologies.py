@@ -1,4 +1,4 @@
-from pycellslib import FiniteNGridTopology
+from pycellslib.core import FiniteNGridTopology
 
 
 class FinitePlaneTopology(FiniteNGridTopology):

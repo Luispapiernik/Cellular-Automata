@@ -50,7 +50,7 @@ class TestWolframCodeRule(unittest.TestCase):
         """
         rule = WolframCodeRule(rule_number=0, states_number=3, neighborhood_radius=1)
 
-        number = np.array([0] * (27 - 5) + [1, 1, 1, 2, 0], dtype=np.int)
+        number = np.array([0] * (27 - 5) + [1, 1, 1, 2, 0], dtype=int)
         self.assertTrue(np.array_equal(rule.get_base_representation(123), number))
 
     def test_get_base_representation_case_2(self):
@@ -59,7 +59,7 @@ class TestWolframCodeRule(unittest.TestCase):
         """
         rule = WolframCodeRule(rule_number=0, states_number=2, neighborhood_radius=1)
 
-        number = np.array([0, 1, 1, 1, 1, 0, 1, 1], dtype=np.int)
+        number = np.array([0, 1, 1, 1, 1, 0, 1, 1], dtype=int)
         self.assertTrue(np.array_equal(rule.get_base_representation(123), number))
 
     def test_base_representation_to_int_case_1(self):
@@ -68,7 +68,7 @@ class TestWolframCodeRule(unittest.TestCase):
         """
         rule = WolframCodeRule(rule_number=0, states_number=2, neighborhood_radius=1)
 
-        number = np.array([1, 0, 1], dtype=np.int)
+        number = np.array([1, 0, 1], dtype=int)
         self.assertEqual(rule.base_representation_to_int(number), 5)
 
     def test_base_representation_to_int_case_2(self):
@@ -77,7 +77,7 @@ class TestWolframCodeRule(unittest.TestCase):
         """
         rule = WolframCodeRule(rule_number=0, states_number=5, neighborhood_radius=1)
 
-        number = np.array([1, 1, 1], dtype=np.int)
+        number = np.array([1, 1, 1], dtype=int)
         self.assertEqual(rule.base_representation_to_int(number), 31)
 
     def test_base_representation_to_int_case_3(self):
@@ -86,7 +86,7 @@ class TestWolframCodeRule(unittest.TestCase):
         """
         rule = WolframCodeRule(rule_number=0, states_number=4, neighborhood_radius=2)
 
-        number = np.array([0, 0, 1, 1, 0], dtype=np.int)
+        number = np.array([0, 0, 1, 1, 0], dtype=int)
         self.assertEqual(rule.base_representation_to_int(number), 20)
 
     def test_apply_rule(self):
@@ -95,7 +95,7 @@ class TestWolframCodeRule(unittest.TestCase):
         """
         rule = WolframCodeRule(rule_number=30, states_number=2, neighborhood_radius=1)
 
-        states = np.array([1, 1, 1], dtype=np.int)
+        states = np.array([1, 1, 1], dtype=int)
         state, _ = rule.apply_rule(states, None)
         self.assertEqual(state, 0)
 

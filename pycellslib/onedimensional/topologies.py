@@ -1,4 +1,4 @@
-from pycellslib import FiniteNGridTopology
+from pycellslib.core import FiniteNGridTopology
 
 
 class FiniteLineTopology(FiniteNGridTopology):
@@ -19,5 +19,5 @@ class FiniteLineTopology(FiniteNGridTopology):
         suman a las dimensiones del espacio
     """
 
-    def __init__(self, attributes_number, size, border_width):
+    def __init__(self, attributes_number: int, size, border_width) -> None:
         super().__init__(attributes_number, (1, size), (0, border_width))

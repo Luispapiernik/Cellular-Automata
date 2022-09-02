@@ -29,7 +29,7 @@ class TestLeftCellNeighborhood(unittest.TestCase):
         neighborhood = LeftCellNeighborhood(4, inclusive=False)
         # son 5 entradas en el array porque se cuenta a la celula como un
         # vecino
-        mask = np.array([[1, 0, 0, 0, 0]], dtype=np.bool)
+        mask = np.array([[1, 0, 0, 0, 0]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -38,7 +38,7 @@ class TestLeftCellNeighborhood(unittest.TestCase):
         Este metodo testea el metodo get_mask de la clase LeftCellNeighborhood
         """
         neighborhood = LeftCellNeighborhood(3, inclusive=True)
-        mask = np.array([[1, 0, 0, 1]], dtype=np.bool)
+        mask = np.array([[1, 0, 0, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -73,7 +73,7 @@ class TestRightCellNeighborhood(unittest.TestCase):
         neighborhood = RightCellNeighborhood(4, inclusive=False)
         # son 5 entradas en el array porque se cuenta a la celula como un
         # vecino
-        mask = np.array([[0, 0, 0, 0, 1]], dtype=np.bool)
+        mask = np.array([[0, 0, 0, 0, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -82,7 +82,7 @@ class TestRightCellNeighborhood(unittest.TestCase):
         Este metodo testea el metodo get_mask de la clase RightCellNeighborhood
         """
         neighborhood = RightCellNeighborhood(3, inclusive=True)
-        mask = np.array([[1, 0, 0, 1]], dtype=np.bool)
+        mask = np.array([[1, 0, 0, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -109,7 +109,7 @@ class TestIntervalCellNeighborhood(unittest.TestCase):
         neighborhood = IntervalCellNeighborhood(4, 3, inclusive=False)
         # son 5 entradas en el array porque se cuenta a la celula como un
         # vecino
-        mask = np.array([[1, 0, 0, 0, 0, 0, 0, 1]], dtype=np.bool)
+        mask = np.array([[1, 0, 0, 0, 0, 0, 0, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -119,7 +119,7 @@ class TestIntervalCellNeighborhood(unittest.TestCase):
         IntervalCellNeighborhood
         """
         neighborhood = IntervalCellNeighborhood(3, 4, inclusive=True)
-        mask = np.array([[1, 0, 0, 1, 0, 0, 0, 1]], dtype=np.bool)
+        mask = np.array([[1, 0, 0, 1, 0, 0, 0, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -157,7 +157,7 @@ class TestLeftSideNeighborhood(unittest.TestCase):
         neighborhood = LeftSideNeighborhood(4, inclusive=False)
         # son 5 entradas en el array porque se cuenta a la celula como un
         # vecino
-        mask = np.array([[1, 1, 1, 1, 0]], dtype=np.bool)
+        mask = np.array([[1, 1, 1, 1, 0]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -167,7 +167,7 @@ class TestLeftSideNeighborhood(unittest.TestCase):
         LeftSideNeighborhood
         """
         neighborhood = LeftSideNeighborhood(3, inclusive=True)
-        mask = np.array([[1, 1, 1, 1]], dtype=np.bool)
+        mask = np.array([[1, 1, 1, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -204,7 +204,7 @@ class TestRightSideNeighborhood(unittest.TestCase):
         neighborhood = RightSideNeighborhood(4, inclusive=False)
         # son 5 entradas en el array porque se cuenta a la celula como un
         # vecino
-        mask = np.array([[0, 1, 1, 1, 1]], dtype=np.bool)
+        mask = np.array([[0, 1, 1, 1, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -213,7 +213,7 @@ class TestRightSideNeighborhood(unittest.TestCase):
         Este metodo testea el metodo get_mask de la clase RightSideNeighborhood
         """
         neighborhood = RightSideNeighborhood(3, inclusive=True)
-        mask = np.array([[1, 1, 1, 1]], dtype=np.bool)
+        mask = np.array([[1, 1, 1, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -240,7 +240,7 @@ class TestBothSideNeighborhood(unittest.TestCase):
         neighborhood = BothSideNeighborhood(4, 3, inclusive=False)
         # son 5 entradas en el array porque se cuenta a la celula como un
         # vecino
-        mask = np.array([[1, 1, 1, 1, 0, 1, 1, 1]], dtype=np.bool)
+        mask = np.array([[1, 1, 1, 1, 0, 1, 1, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -250,7 +250,7 @@ class TestBothSideNeighborhood(unittest.TestCase):
         BothSideNeighborhood
         """
         neighborhood = BothSideNeighborhood(3, 4, inclusive=True)
-        mask = np.array([[1, 1, 1, 1, 1, 1, 1, 1]], dtype=np.bool)
+        mask = np.array([[1, 1, 1, 1, 1, 1, 1, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 

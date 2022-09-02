@@ -24,8 +24,8 @@ class TestAutomata:
 
     def __init__(self):
         self.states = [
-            np.zeros((13, 13), dtype=np.int),
-            np.zeros((13, 13), dtype=np.int),
+            np.zeros((13, 13), dtype=int),
+            np.zeros((13, 13), dtype=int),
         ]
 
         # self.states[0][5:8, 5:8] = [[0, 1, 0], [1, 1, 1], [0, 1, 0]]

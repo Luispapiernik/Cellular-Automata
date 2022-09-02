@@ -1,6 +1,6 @@
 import numpy as np
 
-from pycellslib import Rule
+from pycellslib.core import Rule
 from pycellslib.onedimensional.neighborhoods import MooreNeighborhood
 
 

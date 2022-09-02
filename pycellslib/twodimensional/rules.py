@@ -8,7 +8,7 @@ celulares bidimensionales
 """
 import numpy as np
 
-from pycellslib import Rule
+from pycellslib.core import Rule
 from pycellslib.twodimensional.neighborhoods import MooreNeighborhood
 
 

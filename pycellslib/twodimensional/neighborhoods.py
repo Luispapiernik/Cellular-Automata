@@ -13,7 +13,7 @@ definicion de automatas celulares 2-dimensionales
 
 import numpy as np
 
-from pycellslib import Neighborhood
+from pycellslib.core import Neighborhood
 
 
 class MooreNeighborhood(Neighborhood):
@@ -31,7 +31,7 @@ class MooreNeighborhood(Neighborhood):
     def __init__(self, radius=1, inclusive=True):
         self.radius = radius
 
-        self.mask = np.ones((1 + 2 * radius, 1 + 2 * radius), dtype=np.bool)
+        self.mask = np.ones((1 + 2 * radius, 1 + 2 * radius), dtype=bool)
         if not inclusive:
             self.mask[radius, radius] = 0
 
@@ -79,8 +79,8 @@ class NeumannNeighborhood(Neighborhood):
     def __init__(self, radius=1, inclusive=True):
         self.radius = radius
         xx, yy = np.meshgrid(
-            np.arange(-radius, radius + 1, 1, dtype=np.int),
-            np.arange(-radius, radius + 1, 1, dtype=np.int),
+            np.arange(-radius, radius + 1, 1, dtype=int),
+            np.arange(-radius, radius + 1, 1, dtype=int),
             sparse=True,
         )
         self.mask = np.abs(xx) + np.abs(yy)

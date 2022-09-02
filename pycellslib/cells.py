@@ -9,7 +9,12 @@ En este modulo se implementan las celulas mas comunes (celula del juego de la
 vida, ...) usadas en automatas celulares
 """
 
-from pycellslib import CellInformation
+from typing import Iterable, List, Optional, Union
+
+import numpy as np
+import numpy.typing as npt
+
+from pycellslib.core import CellInformation
 
 
 class StandardCell(CellInformation):
@@ -33,13 +38,18 @@ class StandardCell(CellInformation):
     """
 
     def __init__(
-        self, start=None, end=None, step=None, default_state=None, name_of_states=None
-    ):
-        if isinstance(start, list):
-            self.states = start
-        else:
+        self,
+        start: Union[int, Iterable[int], npt.NDArray[np.int]] = None,
+        end: Optional[int] = None,
+        step: Optional[int] = None,
+        default_state: Optional[int] = None,
+        name_of_states: List[str] = None,
+    ) -> None:
+        if isinstance(start, int):
             # start debe ser int
             self.states = list(range(start if end else 0, end or start, step or 1))
+        else:
+            self.states = list(start)
 
         self.default_state = default_state or self.states[0]
 
@@ -47,7 +57,7 @@ class StandardCell(CellInformation):
         diff = len(self.states) - len(self.name_of_states)
         self.name_of_states.extend([""] * diff)
 
-    def get_states(self):
+    def get_states(self) -> List[int]:
         """
         Este metodo retorna los posibles estados que puede tener una celula
 
@@ -57,7 +67,7 @@ class StandardCell(CellInformation):
         """
         return self.states
 
-    def get_number_of_attributes(self):
+    def get_number_of_attributes(self) -> int:
         """
         Este metodo retorna el numero de atributos que tiene una celula. En
         caso de que la celula no tenga atributos se retorna 0
@@ -68,7 +78,7 @@ class StandardCell(CellInformation):
         """
         return 0
 
-    def get_default_state(self):
+    def get_default_state(self) -> int:
         """
         Este metodo retorna el valor del estado que tienen las celulas por
         defecto
@@ -93,7 +103,7 @@ class StandardCell(CellInformation):
 
     # con el objetivo de obtener y mostrar informacion del automata, como
     # densidad o flujo de celulas en un estado, ... se nombran los estados
-    def get_name_of_state(self, state):
+    def get_name_of_state(self, state: int) -> str:
         """
         Este metodo retorna el nombre asociado a un estado.
 
@@ -110,7 +120,7 @@ class StandardCell(CellInformation):
     # con el objetivo de obtener y mostrar informacion del automata, como
     # densidad, flujos, ... se nombran los atributos, los cuales tienen un
     # orden fijo
-    def get_name_of_attributes(self, index):
+    def get_name_of_attributes(self, index: int):
         """
         Este metodo retorna el nombre del atributo asociado a un indice, el
         indice cuenta desde cero. Se retorna None en caso de que la celula no
@@ -132,5 +142,5 @@ class LifeLikeCell(StandardCell):
     Esta clase representa a las celulas que se usan en el juego de la vida
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__([0, 1], name_of_states=["Dead", "Alive"])

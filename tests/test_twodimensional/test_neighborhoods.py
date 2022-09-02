@@ -8,8 +8,6 @@ import unittest
 import numpy as np
 
 from pycellslib.twodimensional.neighborhoods import (
-    CircularNeighborhood,
-    L2Neighborhood,
     MooreNeighborhood,
     NeumannNeighborhood,
 )
@@ -25,7 +23,7 @@ class TestMooreNeighborhood(unittest.TestCase):
         Este metodo testea el metodo get_mask con radio 1
         """
         neighborhood = MooreNeighborhood(1, inclusive=False)
-        mask = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]], dtype=np.bool)
+        mask = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -34,7 +32,7 @@ class TestMooreNeighborhood(unittest.TestCase):
         Este metodo testea el metodo get_mask con radio 4
         """
         neighborhood = MooreNeighborhood(4, inclusive=True)
-        mask = np.ones((9, 9), dtype=np.bool)
+        mask = np.ones((9, 9), dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -119,7 +117,7 @@ class TestNeumannNeighborhood(unittest.TestCase):
         Este metodo testea el metodo get_mask con radio 1
         """
         neighborhood = NeumannNeighborhood(1, inclusive=False)
-        mask = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], dtype=np.bool)
+        mask = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], dtype=bool)
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
@@ -136,7 +134,7 @@ class TestNeumannNeighborhood(unittest.TestCase):
                 [0, 1, 1, 1, 0],
                 [0, 0, 1, 0, 0],
             ],
-            dtype=np.bool,
+            dtype=bool,
         )
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
@@ -158,7 +156,7 @@ class TestNeumannNeighborhood(unittest.TestCase):
                 [0, 0, 0, 1, 1, 1, 0, 0, 0],
                 [0, 0, 0, 0, 1, 0, 0, 0, 0],
             ],
-            dtype=np.bool,
+            dtype=bool,
         )
 
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))

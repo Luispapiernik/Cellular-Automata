@@ -24,7 +24,7 @@ class TestBSNotationRule(unittest.TestCase):
 
         self.assertIsInstance(neighborhood, MooreNeighborhood)
         # la vecindad debe ser inclusiva
-        mask = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]], dtype=np.bool)
+        mask = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]], dtype=bool)
         self.assertTrue(np.array_equal(neighborhood.get_mask(), mask))
 
     def test_apply_rule_case_1(self):
@@ -35,106 +35,106 @@ class TestBSNotationRule(unittest.TestCase):
         rule = BSNotationRule(B=[3], S=[2, 3], radius=1)
 
         # vivo
-        neighborhoods = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # muerto
-        neighborhoods = np.array([1, 1, 1, 1, 0, 1, 1, 1, 1], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 0, 1, 1, 1, 1], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # vivo
-        neighborhoods = np.array([1, 1, 1, 1, 1, 1, 1, 1, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 1, 1, 1, 1, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # muerto
-        neighborhoods = np.array([1, 1, 1, 1, 0, 1, 1, 1, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 0, 1, 1, 1, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # vivo
-        neighborhoods = np.array([1, 1, 1, 1, 1, 1, 1, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 1, 1, 1, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # muerto
-        neighborhoods = np.array([1, 1, 1, 1, 0, 1, 1, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 0, 1, 1, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # vivo
-        neighborhoods = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # muerto
-        neighborhoods = np.array([1, 1, 1, 1, 0, 1, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 0, 1, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # vivo
-        neighborhoods = np.array([1, 1, 1, 1, 1, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 1, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # muerto
-        neighborhoods = np.array([1, 1, 1, 1, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
-        neighborhoods = np.array([1, 1, 1, 1, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 1, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # vivo
-        neighborhoods = np.array([1, 1, 1, 0, 1, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 0, 1, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
         # muerto
-        neighborhoods = np.array([1, 1, 1, 0, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 1, 0, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
         # vivo
-        neighborhoods = np.array([1, 1, 0, 0, 1, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 0, 0, 1, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
         # muerto
-        neighborhoods = np.array([1, 1, 0, 0, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 1, 0, 0, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # vivo
-        neighborhoods = np.array([1, 0, 0, 0, 1, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 0, 0, 0, 1, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # muerto
-        neighborhoods = np.array([1, 0, 0, 0, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 0, 0, 0, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # vivo
-        neighborhoods = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # muerto
-        neighborhoods = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         # muerto
-        neighborhoods = np.array([1, 0, 0, 0, 0, 0, 1, 0, 1], dtype=np.int)
+        neighborhoods = np.array([1, 0, 0, 0, 0, 0, 1, 0, 1], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
         # vivo
-        neighborhoods = np.array([1, 0, 0, 0, 1, 0, 0, 0, 1], dtype=np.int)
+        neighborhoods = np.array([1, 0, 0, 0, 1, 0, 0, 0, 1], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
@@ -144,11 +144,11 @@ class TestBSNotationRule(unittest.TestCase):
         """
         rule = BSNotationRule(B=[0], S=[2, 3], radius=1)
 
-        neighborhoods = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
-        neighborhoods = np.array([1, 0, 0, 0, 0, 0, 1, 0, 0], dtype=np.int)
+        neighborhoods = np.array([1, 0, 0, 0, 0, 0, 1, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
@@ -160,35 +160,35 @@ class TestBSNotationRule(unittest.TestCase):
 
         neighborhoods = np.array(
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
-            dtype=np.int,
+            dtype=int,
         )
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
         neighborhoods = np.array(
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            dtype=np.int,
+            dtype=int,
         )
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         neighborhoods = np.array(
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            dtype=np.int,
+            dtype=int,
         )
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
         neighborhoods = np.array(
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            dtype=np.int,
+            dtype=int,
         )
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
         neighborhoods = np.array(
             [0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-            dtype=np.int,
+            dtype=int,
         )
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
@@ -199,23 +199,23 @@ class TestBSNotationRule(unittest.TestCase):
         """
         rule = BSNotationRule(B=[2], S=[], radius=1)
 
-        neighborhoods = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
-        neighborhoods = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
-        neighborhoods = np.array([0, 1, 0, 0, 0, 0, 1, 1, 0], dtype=np.int)
+        neighborhoods = np.array([0, 1, 0, 0, 0, 0, 1, 1, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
-        neighborhoods = np.array([0, 1, 0, 0, 1, 0, 1, 1, 0], dtype=np.int)
+        neighborhoods = np.array([0, 1, 0, 0, 1, 0, 1, 1, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
-        neighborhoods = np.array([0, 1, 0, 0, 0, 0, 0, 1, 0], dtype=np.int)
+        neighborhoods = np.array([0, 1, 0, 0, 0, 0, 0, 1, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
@@ -225,26 +225,26 @@ class TestBSNotationRule(unittest.TestCase):
         """
         rule = BSNotationRule(B=[], S=[2], radius=1)
 
-        neighborhoods = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
-        neighborhoods = np.array([1, 0, 0, 0, 0, 0, 1, 1, 0], dtype=np.int)
+        neighborhoods = np.array([1, 0, 0, 0, 0, 0, 1, 1, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
-        neighborhoods = np.array([0, 0, 0, 1, 0, 0, 0, 1, 1], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 1, 0, 0, 0, 1, 1], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
-        neighborhoods = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
 
-        neighborhoods = np.array([0, 1, 0, 0, 1, 0, 1, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 1, 0, 0, 1, 0, 1, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 1)
 
-        neighborhoods = np.array([0, 0, 0, 0, 1, 0, 1, 0, 0], dtype=np.int)
+        neighborhoods = np.array([0, 0, 0, 0, 1, 0, 1, 0, 0], dtype=int)
         state, _ = rule.apply_rule(neighborhoods, None)
         self.assertEqual(state, 0)
