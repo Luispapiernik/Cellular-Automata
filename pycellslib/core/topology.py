@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Iterable, List, Optional, Tuple, Type, Union
+from typing import Iterable, Optional, Tuple, Union
 
 import numpy as np
 import numpy.typing as npt
@@ -208,7 +208,7 @@ class FiniteNGridTopology:
         # this is the index for the reading board
         self.reading_board = memory_length - 1
 
-    def __iter__(self) -> Type[NGridIterator]:
+    def __iter__(self) -> NGridIterator:
         return NGridIterator(self.dimensions, self.frontiers_width)
 
     def flip(self) -> None:
@@ -219,13 +219,15 @@ class FiniteNGridTopology:
         self.reading_board %= self.memory_length
 
     def get_cell(
-        self, position: Tuple[int, ...], board: int = None
+        self, position: Tuple[int, ...], board: Optional[int] = None
     ) -> npt.NDArray[np.float]:
         board = board or self.reading_board
         return self.cells[board][(slice(None, None, None), *position)]
 
     def get_cells(
-        self, subregion: Iterable[Tuple[int, int]] = None, board: int = None
+        self,
+        subregion: Optional[Iterable[Tuple[int, int]]] = None,
+        board: Optional[int] = None,
     ) -> npt.NDArray[np.float]:
         board = board or self.reading_board
         cells = self.cells[board]
@@ -235,7 +237,7 @@ class FiniteNGridTopology:
         return cells
 
     def get_states(
-        self, board: int = None, with_frontiers: bool = False
+        self, board: Optional[int] = None, with_frontiers: bool = False
     ) -> npt.NDArray[np.float]:
         board = board or self.reading_board
         states = self.cells[board][0]
@@ -244,7 +246,7 @@ class FiniteNGridTopology:
         return states
 
     def get_attributes(
-        self, board: int = None, with_frontiers: bool = False
+        self, board: Optional[int] = None, with_frontiers: bool = False
     ) -> npt.NDArray[np.float]:
         board = board or self.reading_board
         attributes = self.cells[board][1:]
@@ -258,11 +260,12 @@ class FiniteNGridTopology:
         self,
         position: Tuple[int, ...],
         cell_state: int,
-        cell_attributes: Optional[Union[List[float], npt.NDArray[np.float]]],
-        board: int = None,
+        cell_attributes: Union[Iterable[float], npt.NDArray[np.float]],
+        board: Optional[int] = None,
     ) -> None:
         board = board or self.writing_board
-        self.cells[board][(slice(None, None, None), *position)] = [
+        index = slice(None, None, None), *position
+        self.cells[board][index] = [
             cell_state,
             *cell_attributes,
         ]
@@ -270,8 +273,8 @@ class FiniteNGridTopology:
     def set_border_cell_values(
         self,
         cell_state: int,
-        cell_attributes: Optional[Union[List[float], npt.NDArray[np.float]]],
-        board: int = None,
+        cell_attributes: Union[Iterable[float], npt.NDArray[np.float]],
+        board: Optional[int] = None,
     ) -> None:
         board = board or self.writing_board
         broadcast_dimension = (np.sum(self.frontier_mask), 1 + self.attributes_number)
@@ -282,13 +285,13 @@ class FiniteNGridTopology:
     def set_cells_values(
         self,
         cell_state: int,
-        cell_attributes: Optional[Union[List[float], npt.NDArray[np.float]]],
-        subregion: Iterable[Tuple[int, int]] = None,
-        board: int = None,
+        cell_attributes: Union[Iterable[float], npt.NDArray[np.float]],
+        subregion: Optional[Iterable[Tuple[int, int]]] = None,
+        board: Optional[int] = None,
     ) -> None:
         board = board or self.writing_board
 
-        index = slice(None, None, None)
+        index: Union[slice, Iterable[slice]] = slice(None, None, None)
         dimensions = self.dimensions
         if subregion is not None:
             index = [slice(None, None, None)]
@@ -309,12 +312,12 @@ class FiniteNGridTopology:
     def set_cells_state_values(
         self,
         cell_state: int,
-        subregion: Iterable[Tuple[int, int]] = None,
-        board: int = None,
+        subregion: Optional[Iterable[Tuple[int, int]]] = None,
+        board: Optional[int] = None,
     ) -> None:
         board = board or self.writing_board
 
-        index = slice(0, 1)
+        index: Union[slice, Iterable[slice]] = slice(0, 1)
         if subregion is not None:
             index = [slice(0, 1)]
             index.extend([slice(i, f) for i, f in subregion])
@@ -324,13 +327,13 @@ class FiniteNGridTopology:
 
     def set_cells_attributes_values(
         self,
-        cell_attributes: Optional[Union[List[float], npt.NDArray[np.float]]],
-        subregion: Iterable[Tuple[int, int]] = None,
-        board: int = None,
+        cell_attributes: Union[Iterable[float], npt.NDArray[np.float]],
+        subregion: Optional[Iterable[Tuple[int, int]]] = None,
+        board: Optional[int] = None,
     ) -> None:
         board = board or self.writing_board
 
-        index = slice(1, None)
+        index: Union[slice, Iterable[slice]] = slice(1, None)
         dimensions = self.dimensions
         if subregion is not None:
             index = [slice(1, None)]
@@ -350,12 +353,12 @@ class FiniteNGridTopology:
     def set_cells_states_from_array(
         self,
         data: npt.NDArray[np.float],
-        subregion: Iterable[Tuple[int, int]] = None,
-        board: int = None,
+        subregion: Optional[Iterable[Tuple[int, int]]] = None,
+        board: Optional[int] = None,
     ) -> None:
         board = board or self.writing_board
 
-        index = slice(0, 1)
+        index: Union[slice, Iterable[slice]] = slice(0, 1)
         if subregion is not None:
             index = [slice(0, 1)]
             index.extend([slice(i, f) for i, f in subregion])
@@ -366,12 +369,12 @@ class FiniteNGridTopology:
     def set_cells_attributes_from_array(
         self,
         data: npt.NDArray[np.float],
-        subregion: Iterable[Tuple[int, int]] = None,
-        board: int = None,
+        subregion: Optional[Iterable[Tuple[int, int]]] = None,
+        board: Optional[int] = None,
     ) -> None:
         board = board or self.writing_board
 
-        index = slice(1, None, None)
+        index: Union[slice, Iterable[slice]] = slice(1, None, None)
         if subregion is not None:
             index = [slice(1, None, None)]
             index.extend([slice(i, f) for i, f in subregion])
@@ -382,12 +385,12 @@ class FiniteNGridTopology:
     def set_cells_from_array(
         self,
         data: npt.NDArray[np.float],
-        subregion: Iterable[Tuple[int, int]] = None,
-        board: int = None,
+        subregion: Optional[Iterable[Tuple[int, int]]] = None,
+        board: Optional[int] = None,
     ) -> None:
         board = board or self.writing_board
 
-        index = slice(None, None, None)
+        index: Union[slice, Iterable[slice]] = slice(None, None, None)
         if subregion is not None:
             index = [slice(None, None, None)]
             index.extend([slice(i, f) for i, f in subregion])

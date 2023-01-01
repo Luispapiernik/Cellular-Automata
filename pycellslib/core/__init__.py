@@ -10,9 +10,10 @@ entre si (con el objeto Automata)
 
 from pycellslib.core.automaton import Automaton
 from pycellslib.core.cell_information import CellInformation
-from pycellslib.core.rule import Rule
-from pycellslib.core.topology import Topology, FiniteNGridTopology
 from pycellslib.core.neighborhood import Neighborhood
+from pycellslib.core.position_iterator import NGridIterator
+from pycellslib.core.rule import Rule
+from pycellslib.core.topology import FiniteNGridTopology, Topology
 
 __all__ = [
     "Automaton",
@@ -20,5 +21,6 @@ __all__ = [
     "Rule",
     "Topology",
     "FiniteNGridTopology",
-    "Neighborhood"
+    "Neighborhood",
+    "NGridIterator",
 ]

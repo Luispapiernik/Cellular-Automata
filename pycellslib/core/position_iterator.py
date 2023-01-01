@@ -1,13 +1,15 @@
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, Type
+from typing import Tuple, Type, TypeVar
 
 import numpy as np
 import numpy.typing as npt
 
+PIterator = TypeVar("PIterator", bound="PositionIterator")
+
 
 class PositionIterator(ABCMeta):
     @abstractmethod
-    def __iter__(self) -> Type["PositionIterator"]:
+    def __iter__(self) -> Type[PIterator]:
         """"""
 
     @abstractmethod
@@ -23,7 +25,7 @@ class NGridIterator(PositionIterator):
         self.frontiers_width = frontiers_width
         self.index = np.ndindex(*(dimensions + frontiers_width))
 
-    def __iter__(self) -> Type[PositionIterator]:
+    def __iter__(self):
         return self
 
     def __next__(self) -> Tuple[int, ...]:

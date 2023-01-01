@@ -43,26 +43,26 @@ class StandardCell(CellInformation):
 
     def __init__(
         self,
-        start: Union[int, Iterable[int], npt.NDArray[np.int]] = None,
+        start: Union[int, Iterable[int], npt.NDArray[np.int]],
         end: Optional[int] = None,
         step: Optional[int] = None,
         default_state: Optional[int] = None,
-        states_names: Optional[List[str]] = [],
-        attributes: Optional[List[float]] = [],
-        attributes_names: Optional[List[str]] = [],
+        states_names: Iterable[str] = [],
+        attributes: Iterable[float] = [],
+        attributes_names: Iterable[str] = [],
     ) -> None:
-        if isinstance(start, int):
-            # start debe ser int
-            self.states = list(range(start if end else 0, end or start, step or 1))
-        else:
-            self.states = list(start)
+        self.states = (
+            list(range(start if end else 0, end or start, step or 1))
+            if isinstance(start, int)
+            else list(start)
+        )
 
         self.default_state = default_state or self.states[0]
         self.states_names = {
             key: value for key, value in zip(self.states, states_names)
         }
 
-        self.default_attributes = attributes[:]
+        self.default_attributes = list(attributes)
         self.attributes_names = {
             key: value for key, value in enumerate(attributes_names)
         }
